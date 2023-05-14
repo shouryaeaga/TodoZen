@@ -1,0 +1,138 @@
+<script>
+    import { page } from '$app/stores'
+    import { browser } from '$app/environment'
+
+    const context = $page.url.searchParams.get('context')
+    
+    let username;
+    let password;
+    $: message = ""
+    import apiUrl from '$lib/appConfig'
+
+    const api_url = apiUrl.apiUrl
+
+    const submitHandler = (e) => {
+        e.preventDefault()
+
+        fetch(`${api_url}/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+            credentials: "include"
+        })
+        .then((res) => {
+            if (res.status === 500) {
+                message = "Internal Server Error"
+            }
+            
+            return res.json()
+        })
+        .then(data => {
+            if (data.msg == "Login successful") {
+                if (browser) {
+                    window.location.href = '/'
+                }
+            } else {
+                message = data.msg
+            }
+        })
+        .catch((err) => console.log(err))
+    }
+</script>
+
+
+
+<br>
+
+<div id="menu">
+    <div id="content">
+        
+        <form on:submit={submitHandler}>
+            {#if context == "home"}
+            You are unauthorized to view that page. Please login
+            {/if}
+            {#if context == "password-reset"}
+            Your password has been reset. Please login
+            {/if}
+            {#if context == "signup"}
+            Successfully created an account. Please login
+            {/if}
+            <input id="usernameInput" type="text" name="username" placeholder="Username" bind:value={username} required/>
+            <br>
+            <input id="passwordInput" type="password" name="password" placeholder="Password" bind:value={password} required/>
+            <br>
+            <input id="submitButton" type="submit" value="Login" />
+            <p id="message">{message}</p>
+            <div id="links">
+                <a href="/auth/password-reset">Forgot your password?</a>
+                <br>
+                <br>
+                <a href="/auth/register">No account? Register now</a>
+            </div>
+            
+        </form>
+        
+    </div>
+    
+</div>
+
+<style>
+    a {
+        margin: 10px;
+        text-align: center;
+    }
+    #menu {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+
+    #content {
+        border: 1px solid #333;
+        padding: 100px;
+        box-shadow: 10px 10px 10px #888;
+        border-radius: 10px;
+        
+    }
+
+    #usernameInput, #passwordInput {
+        background-color: #e9e2e2;
+        padding: 10px;
+        border-radius: 10px;
+        width: 80%;
+        margin: 10px;
+        border: none;
+    }
+
+    #submitButton {
+        background-color: #e9e2e2;
+        border-radius: 10px;
+        border: 2px solid #e9e2e2;
+        padding: 10px;
+        margin: 10px;
+        cursor: pointer;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    a {
+        text-decoration: none;
+    }
+    #links {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+    }
+</style>
