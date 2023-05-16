@@ -8,6 +8,7 @@
     let password;
     $: message = ""
     import apiUrl from '$lib/appConfig'
+    let password_box
 
     const api_url = apiUrl.apiUrl
 
@@ -45,6 +46,14 @@
         })
         .catch((err) => console.log(err))
     }
+
+    const toggleVisibility = (e) => {
+        if (password_box.type === "password") {
+            password_box.type = "text"
+        } else {
+            password_box.type = "password"
+        }
+    }
 </script>
 
 
@@ -66,7 +75,10 @@
             {/if}
             <input id="usernameInput" type="text" name="username" placeholder="Username" bind:value={username} required/>
             <br>
-            <input id="passwordInput" type="password" name="password" placeholder="Password" bind:value={password} required/>
+            <div id="password">
+                <input type="password" name="password" id="passwordInput" placeholder="Password" bind:value={password} bind:this={password_box} required>
+                <button on:click={toggleVisibility}>Show</button>
+            </div>
             <br>
             <input id="submitButton" type="submit" value="Login" />
             <p id="message">{message}</p>
@@ -84,6 +96,11 @@
 </div>
 
 <style>
+    #password {
+        display: flex;
+        position: relative; 
+        width: 100%;
+    }
     a {
         margin: 10px;
         text-align: center;
@@ -134,5 +151,14 @@
         display: flex;
         justify-content: center;
         align-content: center;
+    }
+
+    button {
+        background-color: #e9e2e2;
+        border-radius: 10px;
+        border: 2px solid #e9e2e2;
+        padding: 5px;
+        margin: 5px;
+        cursor: pointer;
     }
 </style>
