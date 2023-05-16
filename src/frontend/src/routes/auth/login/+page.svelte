@@ -71,10 +71,10 @@
             <input id="submitButton" type="submit" value="Login" />
             <p id="message">{message}</p>
             <div id="links">
-                <a href="/auth/password-reset">Forgot your password?</a>
+                <a href="/auth/password-reset">Forgot password?</a>
                 <br>
                 <br>
-                <a href="/auth/register">No account? Register now</a>
+                <a href="/auth/register">Register Now</a>
             </div>
             
         </form>
@@ -97,7 +97,7 @@
 
     #content {
         border: 1px solid #333;
-        padding: 100px;
+        padding: 20px;
         box-shadow: 10px 10px 10px #888;
         border-radius: 10px;
         

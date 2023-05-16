@@ -84,7 +84,7 @@
             <br>
             
             <div id="password">
-                <input type="password" name="password_confirm" id="passwordConfirmInput" placeholder="Password Confirmation" bind:value={password_confirmation} bind:this={password_confirmation_box} required>
+                <input type="password" name="password_confirm" id="passwordConfirmInput" placeholder="Confirmation" bind:value={password_confirmation} bind:this={password_confirmation_box} required>
                 
                 <button on:click={toggleVisibilityConfirm}>Show</button>
             </div>
@@ -114,6 +114,7 @@
     #password {
         display: flex;
         position: relative; 
+        width: 100%;
     }
     #menu {
         position: absolute;
@@ -124,7 +125,7 @@
 
     #content {
         border: 1px solid #333;
-        padding: 100px;
+        padding: 20px;
         box-shadow: 10px 10px 10px #888;
         border-radius: 10px;
     }

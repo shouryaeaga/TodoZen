@@ -68,7 +68,7 @@
     <div id="content">
         {#if !token}
 
-        <h3>Enter your email and we will send a link to reset it</h3>
+        <span>Enter your email and we will send a link to reset it</span>
         <form on:submit={emailPasswordReset}>
             <input type="email" bind:value={email} name="email" id="email" placeholder="Enter your email">
             <input type="submit" value="Submit">
@@ -95,13 +95,13 @@
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
     }
-    h3 {
+    span {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     #content {
         border: 1px solid #333;
-        padding: 100px;
+        padding: 20px;
         box-shadow: 10px 10px 10px #888;
         border-radius: 10px;
         text-align: center;
