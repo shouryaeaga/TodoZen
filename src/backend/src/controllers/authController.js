@@ -70,7 +70,6 @@ const login = async (req, res) => {
         }
         
         // Check hash before checking if user exists, stops timing attack
-        console.log(user.rows[0].password)
         const passwordMatch = await argon2.verify(user.rows[0].password, password)
 
         // User does exist
