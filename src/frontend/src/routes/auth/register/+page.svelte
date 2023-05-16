@@ -121,6 +121,7 @@
         left: 50%;
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
+        
     }
 
     #content {
@@ -128,6 +129,7 @@
         padding: 5px;
         box-shadow: 10px 10px 10px #888;
         border-radius: 10px;
+        width: 350px;
     }
 
     #usernameInput, #passwordInput, #emailInput, #passwordConfirmInput {
