@@ -28,7 +28,7 @@ if (process.env.DEBUG == "true") {
     ))
 } else {
     app.use(cors({
-        origin: ["http://127.0.0.1", "http://localhost", "http://localhost:3000", "http://127.0.0.1:3000", "http://141.147.78.125", "https://141.147.78.125"],
+        origin: ["http://127.0.0.1", "http://localhost", "http://localhost:3000", "http://127.0.0.1:3000", "http://141.147.78.125", "https://141.147.78.125", "http://todo.shouryaeaga.com", "https://todo.shouryaeaga.com"],
         credentials: true
     }
     ))
