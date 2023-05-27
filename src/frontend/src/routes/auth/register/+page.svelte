@@ -121,6 +121,7 @@
         left: 50%;
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
+        
     }
 
     #content {
