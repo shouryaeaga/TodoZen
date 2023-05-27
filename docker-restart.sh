@@ -1,6 +1,6 @@
 #!/bin/bash
 docker compose down
-docker rmi todo-backend todo-frontend
+docker rmi todo-app-backend todo-app-frontend
 cd src/frontend
 npm run build
 cd ..

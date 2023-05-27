@@ -28,15 +28,15 @@ if (process.env.DEBUG == "true") {
     ))
 } else {
     app.use(cors({
-        origin: ["http://127.0.0.1", "http://localhost", "http://localhost:3000", "http://127.0.0.1:3000", "http://141.147.78.125/", "https://141.147.78.125/"],
+	    origin: ["http://todo.shouryaeaga.com", "https://todo.shouryaeaga.com"],
         credentials: true
     }
     ))
 }
 
 
-app.use("/auth", authRouter)
-app.use("/todo", todoRouter)
+app.use("/api/auth", authRouter)
+app.use("/api/todo", todoRouter)
 
 if (process.env.DEBUG == "true") {
     app.listen(5000, () => {

@@ -63,7 +63,7 @@
 <div id="menu">
     <div id="content">
         
-        <form on:submit={submitHandler}>
+        <form>
             {#if context == "home"}
             You are unauthorized to view that page. Please login
             {/if}
@@ -80,7 +80,7 @@
                 <button on:click={toggleVisibility}>Show</button>
             </div>
             <br>
-            <input id="submitButton" type="submit" value="Login" />
+            <input id="submitButton" type="submit" value="Login" on:click={submitHandler}/>
             <p id="message">{message}</p>
             <div id="links">
                 <a href="/auth/password-reset">Forgot password?</a>
@@ -114,7 +114,7 @@
 
     #content {
         border: 1px solid #333;
-        padding: 20px;
+        padding: 50px;
         box-shadow: 10px 10px 10px #888;
         border-radius: 10px;
         

@@ -125,9 +125,10 @@
 
     #content {
         border: 1px solid #333;
-        padding: 20px;
+        padding: 5px;
         box-shadow: 10px 10px 10px #888;
         border-radius: 10px;
+        width: 250px;
     }
 
     #usernameInput, #passwordInput, #emailInput, #passwordConfirmInput {

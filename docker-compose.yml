@@ -4,16 +4,33 @@ services:
     ports:
       - "8000:8000"
   frontend:
-    build: ./src/frontend
+    build: ./src/frontend 
     ports:
-      - "80:3000"
+      - "3000:3000"
   db:
     image: postgres:15.2-alpine
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=shourya
+      - POSTGRES_USER=secret
       - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=todo_app
+      - POSTGRES_DB=secret
     volumes:
       - ./data:/var/lib/postgresql/data
+  nginx:
+    image: nginx:mainline-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - web-root:/var/www/html
+      - ./nginx:/etc/nginx/conf.d
+
+
+volumes:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/TODO-app/src/frontend/build
+      o: bind
