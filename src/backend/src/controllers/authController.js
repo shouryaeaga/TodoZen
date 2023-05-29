@@ -82,7 +82,7 @@ const login = async (req, res) => {
                 const updateQuery = "UPDATE users SET refresh_token = $1 WHERE username = $2"
                 db.query(updateQuery, [refreshToken, username], (err, result) => {
                     if (err) {
-                        return res.status(500).json({msg:err})
+                        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
                     }
                     // Set cookie
                     res.cookie("access_token", accessToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 15})
@@ -99,7 +99,7 @@ const login = async (req, res) => {
         }
     } catch (err) {
         console.log(err)
-        return res.status(500).json({msg:err})
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
     
 }
@@ -142,7 +142,7 @@ const refreshToken = async (req, res) => {
             })
         })
     } catch (err) {
-        return res.status(500).send(err)
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
 }
 
@@ -173,7 +173,7 @@ const forgotPassword = async (req, res) => {
         return res.status(200).json({msg:"Password reset link sent"})
     } catch (err) {
         console.log(err)
-        return res.status(500).json({msg:err})
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
     
 
@@ -201,7 +201,7 @@ const resetPassword = async (req, res) => {
         return res.status(200).json({msg:"Password updated"})
     } catch (err) {
         console.log(err)
-        return res.status(500).json({msg:err})
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
 }
 
