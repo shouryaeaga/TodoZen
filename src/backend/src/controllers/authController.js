@@ -112,11 +112,17 @@ const refreshToken = async (req, res) => {
     }
     
     // Check if refresh token is same as in database
-    const databaseRefreshToken = await db.query("SELECT * FROM users WHERE refresh_token = $1", [refresh_token])
-    if (databaseRefreshToken.rowCount === 0) {
-        return res.status(401).json({msg:"Invalid refresh token"})
+    try {
+        
+        const databaseRefreshToken = await db.query("SELECT * FROM users WHERE refresh_token = $1", [refresh_token])
+        if (databaseRefreshToken.rowCount === 0) {
+            return res.status(401).json({msg:"Invalid refresh token"})
+        }
+        const user = databaseRefreshToken.rows[0]
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
-    const user = databaseRefreshToken.rows[0]
 
     // Verify refresh token
     try {
@@ -142,6 +148,7 @@ const refreshToken = async (req, res) => {
             })
         })
     } catch (err) {
+        console.log(err)
         return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
 }
