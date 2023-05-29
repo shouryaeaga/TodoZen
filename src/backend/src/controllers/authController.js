@@ -40,13 +40,13 @@ const signUp = async (req, res) => {
         db.query(insertQuery, [username, email, hash], (err, result) => {
             if (err) {
                 console.log(err)
-                return res.status(500).json({msg:err})
+                return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
             }
             return res.status(201).json({msg:"User created"})
         })
     } catch (err) {
         console.log(err)
-        return res.status(500).json({msg:err})
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
 }
 
