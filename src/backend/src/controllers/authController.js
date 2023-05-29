@@ -40,13 +40,13 @@ const signUp = async (req, res) => {
         db.query(insertQuery, [username, email, hash], (err, result) => {
             if (err) {
                 console.log(err)
-                return res.status(500).json({msg:err})
+                return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
             }
             return res.status(201).json({msg:"User created"})
         })
     } catch (err) {
         console.log(err)
-        return res.status(500).json({msg:err})
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
 }
 
@@ -82,7 +82,7 @@ const login = async (req, res) => {
                 const updateQuery = "UPDATE users SET refresh_token = $1 WHERE username = $2"
                 db.query(updateQuery, [refreshToken, username], (err, result) => {
                     if (err) {
-                        return res.status(500).json({msg:err})
+                        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
                     }
                     // Set cookie
                     res.cookie("access_token", accessToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 15})
@@ -99,7 +99,7 @@ const login = async (req, res) => {
         }
     } catch (err) {
         console.log(err)
-        return res.status(500).json({msg:err})
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
     
 }
@@ -112,21 +112,27 @@ const refreshToken = async (req, res) => {
     }
     
     // Check if refresh token is same as in database
-    const databaseRefreshToken = await db.query("SELECT * FROM users WHERE refresh_token = $1", [refresh_token])
-    if (databaseRefreshToken.rowCount === 0) {
-        return res.status(401).json({msg:"Invalid refresh token"})
+    try {
+        
+        const databaseRefreshToken = await db.query("SELECT * FROM users WHERE refresh_token = $1", [refresh_token])
+        if (databaseRefreshToken.rowCount === 0) {
+            return res.status(401).json({msg:"Invalid refresh token"})
+        }
+        const user = databaseRefreshToken.rows[0]
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
-    const user = databaseRefreshToken.rows[0]
 
     // Verify refresh token
     try {
         const {username, type} = await jwt.verify(refresh_token, process.env.JWT_SECRET)
-        if (!username || !type === 'refresh') {
+        if (!username || type !== 'refresh') {
             return res.status(401).json({msg:"Invalid refresh token"})
         }
         // Create access and refresh tokens with expires in 15 minutes and 7 days
-        const accessToken = jwt.sign({username: username, type: "access"}, process.env.JWT_SECRET, {expiresIn: "15m"})
-        const refreshToken = jwt.sign({username: username, type: "refresh"}, process.env.JWT_SECRET, {expiresIn: "7d"})
+        const newAccessToken = jwt.sign({username: username, type: "access"}, process.env.JWT_SECRET, {expiresIn: "15m"})
+        const newRefreshToken = jwt.sign({username: username, type: "refresh"}, process.env.JWT_SECRET, {expiresIn: "7d"})
         
         // Set refresh token in database
         const updateQuery = "UPDATE users SET refresh_token = $1 WHERE username = $2"
@@ -142,7 +148,8 @@ const refreshToken = async (req, res) => {
             })
         })
     } catch (err) {
-        return res.status(500).send(err)
+        console.log(err)
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
 }
 
@@ -173,7 +180,7 @@ const forgotPassword = async (req, res) => {
         return res.status(200).json({msg:"Password reset link sent"})
     } catch (err) {
         console.log(err)
-        return res.status(500).json({msg:err})
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
     
 
@@ -199,7 +206,7 @@ const resetPassword = async (req, res) => {
         return res.status(200).json({msg:"Password updated"})
     } catch (err) {
         console.log(err)
-        return res.status(500).json({msg:err})
+        return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
     }
 }
 
