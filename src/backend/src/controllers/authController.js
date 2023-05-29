@@ -136,7 +136,7 @@ const refreshToken = async (req, res) => {
         
         // Set refresh token in database
         const updateQuery = "UPDATE users SET refresh_token = $1 WHERE username = $2"
-        db.query(updateQuery, [refreshToken, username], (err, result) => {
+        db.query(updateQuery, [newRefreshToken, username], (err, result) => {
             if (err) {
                 return res.status(500).json({msg:err})
             }
