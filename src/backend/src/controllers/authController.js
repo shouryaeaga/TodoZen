@@ -140,8 +140,8 @@ const refreshToken = async (req, res) => {
             if (err) {
                 return res.status(500).json({msg:err})
             }
-            res.cookie("access_token", accessToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 15})
-            res.cookie('refresh_token', refreshToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
+            res.cookie("access_token", newAccessToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 15})
+            res.cookie('refresh_token', newRefreshToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
             return res.status(200).json({
                 msg : "Refreshed tokens",
                 user: user
