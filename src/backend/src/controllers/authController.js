@@ -121,7 +121,7 @@ const refreshToken = async (req, res) => {
     // Verify refresh token
     try {
         const {username, type} = await jwt.verify(refresh_token, process.env.JWT_SECRET)
-        if (!username || !type === 'refresh') {
+        if (!username || type !== 'refresh') {
             return res.status(401).json({msg:"Invalid refresh token"})
         }
         // Create access and refresh tokens with expires in 15 minutes and 7 days
