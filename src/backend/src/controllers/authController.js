@@ -194,10 +194,8 @@ const resetPassword = async (req, res) => {
         }
 
         const hashed_password = await argon2.hash(password)
-        const updateQuery = "UPDATE users SET password = $1, password_token=NULL WHERE id = $2"
+        const updateQuery = "UPDATE users SET password = $1, password_token=NULL, refresh_token=NULL WHERE id = $2"
         const updateResults = await db.query(updateQuery, [hashed_password, user_id])
-
-        
         return res.status(200).json({msg:"Password updated"})
     } catch (err) {
         console.log(err)
