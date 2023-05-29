@@ -125,8 +125,8 @@ const refreshToken = async (req, res) => {
             return res.status(401).json({msg:"Invalid refresh token"})
         }
         // Create access and refresh tokens with expires in 15 minutes and 7 days
-        const accessToken = jwt.sign({username: username, type: "access"}, process.env.JWT_SECRET, {expiresIn: "15m"})
-        const refreshToken = jwt.sign({username: username, type: "refresh"}, process.env.JWT_SECRET, {expiresIn: "7d"})
+        const newAccessToken = jwt.sign({username: username, type: "access"}, process.env.JWT_SECRET, {expiresIn: "15m"})
+        const newRefreshToken = jwt.sign({username: username, type: "refresh"}, process.env.JWT_SECRET, {expiresIn: "7d"})
         
         // Set refresh token in database
         const updateQuery = "UPDATE users SET refresh_token = $1 WHERE username = $2"
