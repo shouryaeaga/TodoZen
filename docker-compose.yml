@@ -23,14 +23,5 @@ services:
     ports:
       - "80:80"
     volumes:
-      - web-root:/var/www/html
       - ./nginx:/etc/nginx/conf.d
 
-
-volumes:
-  web-root:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/ubuntu/TODO-app/src/frontend/build
-      o: bind
