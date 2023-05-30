@@ -20,7 +20,7 @@ const sendEmail = async (from, to, subject, html, text) => {
             }
         })
         transporter.sendMail(mailOptions, (error, info) => {
-            if (err) {
+            if (error) {
                 console.log("Email not sent:", error)
             } else {
                 console.log("Email sent:", info)
