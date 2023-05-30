@@ -1,3 +1,3 @@
-const apiUrl = 'https://todo.shouryaeaga.com/api'
+const apiUrl = 'http://localhost/api'
 
 export default {apiUrl}
