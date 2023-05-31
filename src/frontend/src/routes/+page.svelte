@@ -100,7 +100,7 @@
         }
     }
 
-    function deleteHandler(index) {
+    function deleteHandler(index, todo_id) {
         
         fetch(`${api_url}/todo/me`, {
             method: "DELETE",
@@ -108,7 +108,7 @@
                 "Content-Type": "application/json"
             },
             credentials: "include",
-            body: JSON.stringify({"id": id})
+            body: JSON.stringify({"id": todo_id})
         })
         .then(response => response.json())
         .then(data => {
@@ -159,7 +159,7 @@ loading...
 {#if todos.length > 0}
 <div id="todos">
     {#each todos as todo, index (todo.id)}
-        <Todo onDelete={deleteHandler(index)} completed={todo.completed} details={todo.details} id={todo.id} />
+        <Todo onDelete={deleteHandler(index, todo.id)} completed={todo.completed} details={todo.details} id={todo.id} />
         <br>
     {/each}
 </div>
