@@ -112,7 +112,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            todos.splice(index, 1)
+            todos = todos.splice(index, 1)
         })
     }
 
