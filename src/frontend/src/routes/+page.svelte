@@ -111,10 +111,8 @@
         })
         .then(response => response.json())
         .then(data => {
-            const index = todos.indexOf(todo)
-            console.log(index)
-            console.log(todos)
-            todos = todos.splice(index, 1)
+            
+            todos = todos.filter(todoItem => todoItem !== todo)
         })
     }
 
