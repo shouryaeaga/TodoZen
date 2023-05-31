@@ -67,6 +67,7 @@
             .then((response) => response.json())
             .then((data) => {
                 todos = [...todos, data]
+                todoDetail = ""
             })
             .catch((err) => console.log(err))
         }
