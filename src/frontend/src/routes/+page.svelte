@@ -14,6 +14,8 @@
 
     let todoDetail = ""
 
+    let toggle_account_popup
+
     let user = {};
     let username = ""
     function refresh() {
@@ -121,7 +123,8 @@
     
     function documentClickEvent(event) {
         const isOutsideMenuPopup = !account_popup.contains(event.target)
-        if (isOutsideMenuPopup) {
+        const isOutsideMenuPopupButton = !toggle_account_popup.contains(event.target)
+        if (isOutsideMenuPopup && isOutsideMenuPopupButton) {
             if (account_popup.style.display === "block") {
                 account_popup.style.display = "none"
             }
@@ -146,7 +149,7 @@ loading...
 {:else}
 
 <nav>
-    <button on:click={toggleAccountPopup} id="togglePopupButton">{username}</button>
+    <button on:click={toggleAccountPopup} bind:this={toggle_account_popup} id="togglePopupButton">{username}</button>
 
     <div id="account-popup" bind:this={account_popup} style="none">
         <h1>Account</h1>
