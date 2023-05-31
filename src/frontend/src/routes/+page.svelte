@@ -139,11 +139,11 @@
     })
 </script>
 
+<svelte:document on:click={documentClickEvent} />
+
 {#if loading}
 loading...
 {:else}
-
-<svelte:document on:click={documentClickEvent} />
 
 <nav>
     <button on:click={toggleAccountPopup} id="togglePopupButton">{username}</button>
