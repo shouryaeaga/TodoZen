@@ -1,4 +1,5 @@
 <script>
+    export let onDelete;
     export let completed;
     export let details;
     let oldDetails = details;
@@ -51,22 +52,21 @@
     }
 
     function deleteHandler(e) {
-        if (confirm("Are you sure you want to delete this item?")) {
-            fetch(`${api_url}/todo/me`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify({"id": id})
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (browser) {
-                    window.location.href = "/"
-                }
-            })
-        }
+        fetch(`${api_url}/todo/me`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({"id": id})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (browser) {
+                window.location.href = "/"
+            }
+        })
+        onDelete()
     }
     
     function cancelHandler(e) {

@@ -100,6 +100,24 @@
         }
     }
 
+    function deleteHandler(index) {
+        todos.splice(index, 1)
+        fetch(`${api_url}/todo/me`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({"id": id})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (browser) {
+                window.location.href = "/"
+            }
+        })
+    }
+
     onMount(async () => {
         await refresh()
         const refreshInterval = setInterval(refresh, 870000)
@@ -142,8 +160,8 @@ loading...
 
 {#if todos.length > 0}
 <div id="todos">
-    {#each todos as todo (todo.id)}
-        <Todo completed={todo.completed} details={todo.details} id={todo.id} />
+    {#each todos as todo, index (todo.id)}
+        <Todo onDelete={deleteHandler(index)} completed={todo.completed} details={todo.details} id={todo.id} />
         <br>
     {/each}
 </div>
