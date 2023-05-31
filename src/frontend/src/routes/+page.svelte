@@ -159,7 +159,7 @@ loading...
 {#if todos.length > 0}
 <div id="todos">
     {#each todos as todo, index (todo.id)}
-        <Todo onDelete={deleteHandler(index, todo.id)} completed={todo.completed} details={todo.details} id={todo.id} />
+        <Todo onDelete={deleteHandler} index={index} completed={todo.completed} details={todo.details} id={todo.id} />
         <br>
     {/each}
 </div>

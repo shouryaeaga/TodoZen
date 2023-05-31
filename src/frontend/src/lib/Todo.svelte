@@ -1,5 +1,6 @@
 <script>
     export let onDelete;
+    export let index
     export let completed;
     export let details;
     let oldDetails = details;
@@ -52,7 +53,7 @@
     }
 
     function deleteHandler(e) {
-        onDelete()
+        onDelete(index, id)
     }
     
     function cancelHandler(e) {
