@@ -52,20 +52,6 @@
     }
 
     function deleteHandler(e) {
-        fetch(`${api_url}/todo/me`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({"id": id})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (browser) {
-                window.location.href = "/"
-            }
-        })
         onDelete()
     }
     
