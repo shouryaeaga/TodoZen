@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from 'svelte'
     import { page } from '$app/stores'
     import { browser } from '$app/environment'
 
@@ -6,11 +7,36 @@
     
     let username;
     let password;
+    let error = false
     $: message = ""
     import apiUrl from '$lib/appConfig'
     let password_box
 
+    let loading = true
     const api_url = apiUrl.apiUrl
+
+    onMount(() => {
+        fetch(`${api_url}/auth/refresh`, {
+            method: "POST",
+            credentials: "include",
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                if (browser) {
+                    window.location.href = "/"
+                }
+            } else if (response.status === 401) {
+                loading = false
+            } else {
+                loading = false
+                error = true
+            }
+            return response.json()
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    })
 
     const submitHandler = (e) => {
         e.preventDefault()
@@ -56,8 +82,11 @@
     }
 </script>
 
-
-
+{#if loading}
+    Loading...
+{:else if error}
+    There was an error, please contact support@shouryaeaga.com
+{:else}
 <br>
 
 <div id="menu">
@@ -94,6 +123,8 @@
     </div>
     
 </div>
+{/if}
+
 
 <style>
     #password {

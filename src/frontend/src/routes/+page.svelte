@@ -6,11 +6,15 @@
     import apiUrl from '$lib/appConfig'
     const api_url = apiUrl.apiUrl
 
+    let account_popup;
+
     let todos = []
 
     let loading = true
 
     let todoDetail = ""
+
+    let toggle_account_popup
 
     let user = {};
     let username = ""
@@ -45,9 +49,9 @@
         })
        .then((response) => response.json())
        .then((data) => {
-        todos = data
- 
-    })}
+            todos = data
+        }
+    )}
 
     function addTodo(e) {
         e.preventDefault()
@@ -67,6 +71,7 @@
             .then((response) => response.json())
             .then((data) => {
                 todos = [...todos, data]
+                todoDetail = ""
             })
             .catch((err) => console.log(err))
         }
@@ -100,8 +105,7 @@
         }
     }
 
-    function deleteHandler(index, todo_id) {
-        
+    function deleteHandler(todo, todo_id) {
         fetch(`${api_url}/todo/me`, {
             method: "DELETE",
             headers: {
@@ -112,8 +116,19 @@
         })
         .then(response => response.json())
         .then(data => {
-            todos = todos.splice(index, 1)
+            
+            todos = todos.filter(todoItem => todoItem !== todo)
         })
+    }
+    
+    function documentClickEvent(event) {
+        const isOutsideMenuPopup = !account_popup.contains(event.target)
+        const isOutsideMenuPopupButton = !toggle_account_popup.contains(event.target)
+        if (isOutsideMenuPopup && isOutsideMenuPopupButton) {
+            if (account_popup.style.display === "block") {
+                account_popup.style.display = "none"
+            }
+        }
     }
 
     onMount(async () => {
@@ -127,14 +142,16 @@
     })
 </script>
 
+<svelte:document on:click={documentClickEvent} />
+
 {#if loading}
 loading...
 {:else}
 
 <nav>
-    <button on:click={toggleAccountPopup} id="togglePopupButton">{username}</button>
+    <button on:click={toggleAccountPopup} bind:this={toggle_account_popup} id="togglePopupButton">{username}</button>
 
-    <div id="account-popup" style="none">
+    <div id="account-popup" bind:this={account_popup} style="none">
         <h1>Account</h1>
         <p>Username: {user.username}</p>
         <p>Email: {user.email}</p>
@@ -159,7 +176,7 @@ loading...
 {#if todos.length > 0}
 <div id="todos">
     {#each todos as todo, index (todo.id)}
-        <Todo onDelete={deleteHandler} index={index} completed={todo.completed} details={todo.details} id={todo.id} />
+        <Todo onDelete={deleteHandler} todo={todo} index={index} completed={todo.completed} details={todo.details} id={todo.id} />
         <br>
     {/each}
 </div>

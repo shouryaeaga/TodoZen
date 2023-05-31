@@ -3,6 +3,7 @@
     export let index
     export let completed;
     export let details;
+    export let todo
     let oldDetails = details;
     export let id;
     import {browser} from "$app/environment"
@@ -53,7 +54,7 @@
     }
 
     function deleteHandler(e) {
-        onDelete(index, id)
+        onDelete(todo, id)
     }
     
     function cancelHandler(e) {

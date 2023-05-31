@@ -10,6 +10,32 @@
     import apiUrl from '$lib/appConfig'
 
     import {browser} from '$app/environment'
+    import {onMount} from 'svelte'
+    let loading = true
+    let error = false
+
+    onMount(() => {
+        fetch(`${api_url}/auth/refresh`, {
+            method: "POST",
+            credentials: "include",
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                if (browser) {
+                    window.location.href = "/"
+                }
+            } else if (response.status === 401) {
+                loading = false
+            } else {
+                loading = false
+                error = true
+            }
+            return response.json()
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    })
 
     const api_url = apiUrl.apiUrl
 
@@ -72,6 +98,12 @@
     }
 </script>
 
+{#if loading}
+Loading...
+{:else if error}
+There was an error, please contact support@shouryaeaga.com
+{:else}
+
 <div id="menu">
     <div id="content">
         <form>
@@ -106,6 +138,8 @@
         
     </div>
 </div>
+
+{/if}
 
 <style>
     button {
