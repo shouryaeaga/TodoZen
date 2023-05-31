@@ -51,21 +51,26 @@
 
     function addTodo(e) {
         e.preventDefault()
-        fetch(`${api_url}/todo/me`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                details: todoDetail,
-            }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            todos = [...todos, data]
-        })
-        .catch((err) => console.log(err))
+        if (todoDetail.length > 512) {
+            alert("Todo cannot be longer than 512 characters")
+        } else{
+            fetch(`${api_url}/todo/me`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    details: todoDetail,
+                }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                todos = [...todos, data]
+            })
+            .catch((err) => console.log(err))
+        }
+        
     }
 
     function logout() {
