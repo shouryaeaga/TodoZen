@@ -101,7 +101,8 @@
     }
 
     function deleteHandler(index, todo_id) {
-        
+        console.log(index)
+        console.log(todos)
         fetch(`${api_url}/todo/me`, {
             method: "DELETE",
             headers: {
