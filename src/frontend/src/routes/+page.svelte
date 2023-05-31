@@ -45,9 +45,9 @@
         })
        .then((response) => response.json())
        .then((data) => {
-        todos = data
- 
-    })}
+            todos = data
+        }
+    )}
 
     function addTodo(e) {
         e.preventDefault()
@@ -113,7 +113,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            todos = todos.splice(index, 1)
+            todos = todos.splice(index-1, 1)
         })
     }
 
