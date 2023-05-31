@@ -112,7 +112,9 @@
         .then(response => response.json())
         .then(data => {
             const index = todos.indexOf(todo)
-            todos.splice(index, 1)
+            console.log(index)
+            console.log(todos)
+            todos = todos.splice(index, 1)
         })
     }
 
