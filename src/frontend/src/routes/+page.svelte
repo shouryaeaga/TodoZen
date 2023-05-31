@@ -100,9 +100,7 @@
         }
     }
 
-    function deleteHandler(index, todo_id) {
-        console.log(index)
-        console.log(todos)
+    function deleteHandler(todo, todo_id) {
         fetch(`${api_url}/todo/me`, {
             method: "DELETE",
             headers: {
@@ -113,7 +111,8 @@
         })
         .then(response => response.json())
         .then(data => {
-            todos = todos.splice(index)
+            const index = todos.indexOf(todo)
+            todos.splice(index, 1)
         })
     }
 
@@ -160,7 +159,7 @@ loading...
 {#if todos.length > 0}
 <div id="todos">
     {#each todos as todo, index (todo.id)}
-        <Todo onDelete={deleteHandler} index={index} completed={todo.completed} details={todo.details} id={todo.id} />
+        <Todo onDelete={deleteHandler} todo={todo} index={index} completed={todo.completed} details={todo.details} id={todo.id} />
         <br>
     {/each}
 </div>
