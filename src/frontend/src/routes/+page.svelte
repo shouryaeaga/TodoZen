@@ -6,6 +6,8 @@
     import apiUrl from '$lib/appConfig'
     const api_url = apiUrl.apiUrl
 
+    let account_popup;
+
     let todos = []
 
     let loading = true
@@ -116,6 +118,15 @@
             todos = todos.filter(todoItem => todoItem !== todo)
         })
     }
+    
+    function documentClickEvent(event) {
+        const isOutsideMenuPopup = !account_popup.contains(event.target)
+        if (isOutsideMenuPopup) {
+            if (account_popup.style.display === "block") {
+                account_popup.style.display = "none"
+            }
+        }
+    }
 
     onMount(async () => {
         await refresh()
@@ -132,10 +143,12 @@
 loading...
 {:else}
 
+<svelte:document on:click={documentClickEvent} />
+
 <nav>
     <button on:click={toggleAccountPopup} id="togglePopupButton">{username}</button>
 
-    <div id="account-popup" style="none">
+    <div id="account-popup" bind:this={account_popup} style="none">
         <h1>Account</h1>
         <p>Username: {user.username}</p>
         <p>Email: {user.email}</p>
