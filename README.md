@@ -2,6 +2,8 @@
 
 This repository contains the source code for a Todo website built with Svelte, Node.js, Express, and Nginx. The website allows users to manage their tasks and includes JWT authentication for secure user login and registration. It utilizes Docker containers for easy deployment and Nodemailer for email functionality.
 
+A working version can be found on https://todo.shouryaeaga.com
+
 ## Features
 
 - User registration and login using JWT authentication
