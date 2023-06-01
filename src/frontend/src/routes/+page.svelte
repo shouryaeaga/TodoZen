@@ -20,7 +20,7 @@
 
     let user = {};
     let username = ""
-    function refresh() {
+    function refresh(todoReq) {
         fetch(`${api_url}/auth/refresh`, {
             method: "POST",
             credentials: "include",
@@ -28,10 +28,8 @@
         .then((response) => {
             if (response.status === 401) {
                 anonymous = true
-                console.log("Now anonymous - refresh")
-            } else {
-                
             }
+            todoReq()
             return response.json()
         })
         .then((data) => {
@@ -41,9 +39,7 @@
     }
 
     function getTodos() {
-        console.log("Getting todos")
         if (anonymous === false) {
-            console.log("Not anonymous - getting")
             fetch(`${api_url}/todo/me`, {
                 method: "GET",
                 credentials: "include",
@@ -54,7 +50,6 @@
                 loading = false
             })
         } else {
-            console.log("anonymous - getting")
             todos = JSON.parse(localStorage.getItem("todos"))
             console.log(todos)
             if (todos == null || todos.length == 0) {
@@ -161,10 +156,9 @@
     }
 
     onMount(async () => {
-        await refresh()
+        await refresh(getTodos)
         const refreshInterval = setInterval(refresh, 870000)
 
-        getTodos()
         return () => {
             clearInterval(refreshInterval)
         }
