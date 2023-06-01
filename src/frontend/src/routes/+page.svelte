@@ -28,6 +28,7 @@
         .then((response) => {
             if (response.status === 401) {
                 anonymous = true
+                loading = false
             } else {
                 loading = false
             }
