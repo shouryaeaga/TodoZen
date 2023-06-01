@@ -53,8 +53,10 @@
             })
         } else {
             todos = JSON.parse(localStorage.getItem("todos"))
+            console.log(todos)
             if (todos == null || todos.length == 0) {
                 todos = []
+                console.log(todos)
             }
         }
     }
