@@ -83,7 +83,7 @@
             })
             .catch((err) => console.log(err))
         } else {
-            newTodo = {id: crypto.randomUUID(), anonymous: true, details: todoDetail, completed: false}
+            const newTodo = {id: crypto.randomUUID(), anonymous: true, details: todoDetail, completed: false}
             todos = [...todos, newTodo]
             localStorage.setItem("todos", JSON.stringify(todos))
         }
