@@ -41,6 +41,7 @@
     }
 
     function getTodos() {
+        console.log("Getting todos")
         if (!anonymous) {
             fetch(`${api_url}/todo/me`, {
                 method: "GET",
