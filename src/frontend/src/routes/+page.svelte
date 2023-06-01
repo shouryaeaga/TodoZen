@@ -28,6 +28,7 @@
         .then((response) => {
             if (response.status === 401) {
                 anonymous = true
+                console.log("Now anonymous - refresh")
             } else {
                 
             }
@@ -42,6 +43,7 @@
     function getTodos() {
         console.log("Getting todos")
         if (anonymous === false) {
+            console.log("Not anonymous - getting")
             fetch(`${api_url}/todo/me`, {
                 method: "GET",
                 credentials: "include",
@@ -52,6 +54,7 @@
                 loading = false
             })
         } else {
+            console.log("anonymous - getting")
             todos = JSON.parse(localStorage.getItem("todos"))
             console.log(todos)
             if (todos == null || todos.length == 0) {
