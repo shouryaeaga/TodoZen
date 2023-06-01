@@ -12,6 +12,8 @@
 
     let loading = true
 
+    let anonymous = false
+
     let todoDetail = ""
 
     let toggle_account_popup
@@ -25,9 +27,8 @@
         })
         .then((response) => {
             if (response.status === 401) {
-                if (browser) {
-                    window.location.href = "/auth/login?context=home"
-                }
+                anonymous = true
+                return
             } else {
                 loading = false
             }
@@ -37,27 +38,34 @@
             user = data.user;
             username = (user.username).charAt(0).toUpperCase() + (user.username).slice(1)
         })
-        .catch((err) => {
-            console.log(err)
-        })
     }
 
     function getTodos() {
-        return fetch(`${api_url}/todo/me`, {
-            method: "GET",
-            credentials: "include",
-        })
-       .then((response) => response.json())
-       .then((data) => {
-            todos = data
+        if (!anonymous) {
+            fetch(`${api_url}/todo/me`, {
+                method: "GET",
+                credentials: "include",
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                todos = data
+                
+            })
+        } else {
+            todos = JSON.parse(localStorage.getItem("todos"))
+            if (todos == null || todos.length == 0) {
+                todos = []
+            }
         }
-    )}
+    }
 
     function addTodo(e) {
         e.preventDefault()
         if (todoDetail.length > 512) {
             alert("Todo cannot be longer than 512 characters")
-        } else{
+            return
+        } 
+        if (!anonymous) {
             fetch(`${api_url}/todo/me`, {
                 method: "POST",
                 credentials: "include",
@@ -74,6 +82,10 @@
                 todoDetail = ""
             })
             .catch((err) => console.log(err))
+        } else {
+            newTodo = {id: crypto.randomUUID(), anonymous: true, details: todoDetail, completed: false}
+            todos = [...todos, newTodo]
+            localStorage.setItem("todos", JSON.stringify(todos))
         }
         
     }
@@ -106,6 +118,10 @@
     }
 
     function deleteHandler(todo, todo_id) {
+        if (anonymous) {
+            todos = todos.filter(todoItem => todoItem !== todo)
+            localStorage.setItem("")
+        }
         fetch(`${api_url}/todo/me`, {
             method: "DELETE",
             headers: {
@@ -116,8 +132,8 @@
         })
         .then(response => response.json())
         .then(data => {
-            
             todos = todos.filter(todoItem => todoItem !== todo)
+            localStorage.setItem("todos", JSON.stringify(todos))
         })
     }
     
@@ -128,6 +144,12 @@
             if (account_popup.style.display === "block") {
                 account_popup.style.display = "none"
             }
+        }
+    }
+
+    function loginRedirect() {
+        if (browser) {
+            window.location.href = "/auth/login"
         }
     }
 
@@ -149,6 +171,9 @@ loading...
 {:else}
 
 <nav>
+    {#if anonymous}
+    <button on:click={loginRedirect} id="loginButton">Login</button>
+    {:else}
     <button on:click={toggleAccountPopup} bind:this={toggle_account_popup} id="togglePopupButton">{username}</button>
 
     <div id="account-popup" bind:this={account_popup} style="none">
@@ -157,6 +182,8 @@ loading...
         <p>Email: {user.email}</p>
         <button on:click={logout} id="logout-button">Logout</button>
     </div>
+    {/if}
+    
     
 </nav>
 
@@ -181,11 +208,15 @@ loading...
     {/each}
 </div>
 {:else}
-<p>No todos yet</p>
+<p id="no-todo-message">No todos yet</p>
 {/if}
 {/if}
 
 <style>
+
+    #no-todo-message {
+        text-align: center;
+    }
 
     #logout-button {
         background-color: #c7bebe;
