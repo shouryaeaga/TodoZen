@@ -157,7 +157,7 @@
     }
 
     onMount(async () => {
-        refresh()
+        await refresh()
         const refreshInterval = setInterval(refresh, 870000)
 
         getTodos()
