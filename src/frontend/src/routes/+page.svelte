@@ -21,16 +21,15 @@
     let user = {};
     let username = ""
     function refresh() {
-        return fetch(`${api_url}/auth/refresh`, {
+        fetch(`${api_url}/auth/refresh`, {
             method: "POST",
             credentials: "include",
         })
         .then((response) => {
             if (response.status === 401) {
                 anonymous = true
-                loading = false
             } else {
-                loading = false
+                
             }
             return response.json()
         })
@@ -42,7 +41,7 @@
 
     function getTodos() {
         console.log("Getting todos")
-        if (!anonymous) {
+        if (anonymous === false) {
             fetch(`${api_url}/todo/me`, {
                 method: "GET",
                 credentials: "include",
@@ -50,7 +49,7 @@
             .then((response) => response.json())
             .then((data) => {
                 todos = data
-                
+                loading = false
             })
         } else {
             todos = JSON.parse(localStorage.getItem("todos"))
@@ -59,6 +58,8 @@
                 todos = []
                 console.log(todos)
             }
+
+            loading = false
         }
     }
 
