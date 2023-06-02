@@ -28,13 +28,16 @@
         .then((response) => {
             if (response.status === 401) {
                 anonymous = true
+                todoReq()
             }
             todoReq()
             return response.json()
         })
         .then((data) => {
-            user = data.user;
-            username = (user.username).charAt(0).toUpperCase() + (user.username).slice(1)
+            if (data.user) {
+                user = data.user;
+                username = (user.username).charAt(0).toUpperCase() + (user.username).slice(1)
+            }
         })
     }
 
@@ -140,13 +143,16 @@
     }
     
     function documentClickEvent(event) {
-        const isOutsideMenuPopup = !account_popup.contains(event.target)
-        const isOutsideMenuPopupButton = !toggle_account_popup.contains(event.target)
-        if (isOutsideMenuPopup && isOutsideMenuPopupButton) {
-            if (account_popup.style.display === "block") {
-                account_popup.style.display = "none"
+        if (!anonymous) {
+            const isOutsideMenuPopup = !account_popup.contains(event.target)
+            const isOutsideMenuPopupButton = !toggle_account_popup.contains(event.target)
+            if (isOutsideMenuPopup && isOutsideMenuPopupButton) {
+                if (account_popup.style.display === "block") {
+                    account_popup.style.display = "none"
+                }
             }
         }
+        
     }
 
     function loginRedirect() {
