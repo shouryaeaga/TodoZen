@@ -1,5 +1,6 @@
 <script>
     export let onDelete;
+    export let anonymous
     export let index
     export let completed;
     export let details;
