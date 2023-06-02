@@ -24,6 +24,7 @@
             const objIndex = todos.findIndex((todo => todo.id == id))
             todos[objIndex].details = details
             localStorage.setItem("todos", JSON.stringify)
+            return
         }
 
         if (oldDetails !== details) {
