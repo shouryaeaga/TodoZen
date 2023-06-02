@@ -120,21 +120,23 @@
     function deleteHandler(todo, todo_id) {
         if (anonymous) {
             todos = todos.filter(todoItem => todoItem !== todo)
-            localStorage.setItem("")
-        }
-        fetch(`${api_url}/todo/me`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({"id": todo_id})
-        })
-        .then(response => response.json())
-        .then(data => {
-            todos = todos.filter(todoItem => todoItem !== todo)
             localStorage.setItem("todos", JSON.stringify(todos))
-        })
+        } else {
+            fetch(`${api_url}/todo/me`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({"id": todo_id})
+            })
+            .then(response => response.json())
+            .then(data => {
+                todos = todos.filter(todoItem => todoItem !== todo)
+                localStorage.setItem("todos", JSON.stringify(todos))
+            })
+        }
+        
     }
     
     function documentClickEvent(event) {
@@ -202,7 +204,8 @@ loading...
 {#if todos.length > 0}
 <div id="todos">
     {#each todos as todo, index (todo.id)}
-        <Todo onDelete={deleteHandler} todo={todo} index={index} completed={todo.completed} details={todo.details} id={todo.id} />
+        
+        <Todo onDelete={deleteHandler} anonymous={anonymous} todo={todo} index={index} completed={todo.completed} details={todo.details} id={todo.id} />
         <br>
     {/each}
 </div>

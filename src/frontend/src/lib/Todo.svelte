@@ -18,6 +18,13 @@
     let popup
 
     function changeHandler(e) {
+        if (anonymous) {
+            let todos = JSON.parse(localStorage.getItem("todos"))
+            const objIndex = todos.findIndex((todo => todo.id == id))
+            todos[objIndex].details = details
+            localStorage.setItem("todos", JSON.stringify)
+        }
+
         if (oldDetails !== details) {
             fetch(`${api_url}/todo/me`, {
                 method: "PUT",
@@ -43,7 +50,13 @@
     }
 
     function toggleHandler() {
-        fetch(`${api_url}/todo/me`, {
+        if (anonymous) {
+            let todos = JSON.parse(localStorage.getItem("todos"))
+            const objIndex = todos.findIndex((todo => todo.id == id)) 
+            todos[objIndex].completed = completed
+            localStorage.setItem("todos", JSON.stringify)
+        } else {
+            fetch(`${api_url}/todo/me`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -51,6 +64,8 @@
             credentials: "include",
             body: JSON.stringify({"id": id, "details": oldDetails, "completed": completed})
         })
+        }
+        
     }
 
     function deleteHandler(e) {
