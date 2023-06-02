@@ -56,7 +56,7 @@
             let todos = JSON.parse(localStorage.getItem("todos"))
             const objIndex = todos.findIndex((todo => todo.id == id)) 
             todos[objIndex].completed = completed
-            localStorage.setItem("todos", JSON.stringify)
+            localStorage.setItem("todos", JSON.stringify(todos))
         } else {
             fetch(`${api_url}/todo/me`, {
             method: "PUT",
