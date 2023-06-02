@@ -23,7 +23,7 @@
             let todos = JSON.parse(localStorage.getItem("todos"))
             const objIndex = todos.findIndex((todo => todo.id == id))
             todos[objIndex].details = details
-            localStorage.setItem("todos", JSON.stringify)
+            localStorage.setItem("todos", JSON.stringify(todos))
             return
         }
 
