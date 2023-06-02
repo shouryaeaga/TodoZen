@@ -1,5 +1,6 @@
 <script>
     export let onDelete;
+    export let anonymous
     export let index
     export let completed;
     export let details;
@@ -18,32 +19,46 @@
     let popup
 
     function changeHandler(e) {
-        if (oldDetails !== details) {
-            fetch(`${api_url}/todo/me`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify({"id": id, "details": details, "completed": completed})
-            })
-            .then(response => response.json())
-            .then(data => {
-                details = data.details
-                oldDetails = details
-                completed = data.completed
-            })
-            .then(() => {
-                saveButton.style.display = "none"
-                cancelButton.style.display = "none"
-            })
+        if (anonymous) {
+            let todos = JSON.parse(localStorage.getItem("todos"))
+            const objIndex = todos.findIndex((todo => todo.id == id))
+            todos[objIndex].details = details
+            localStorage.setItem("todos", JSON.stringify(todos))
+            return
+        } else {
+            if (oldDetails !== details) {
+                fetch(`${api_url}/todo/me`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({"id": id, "details": details, "completed": completed})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    details = data.details
+                    oldDetails = details
+                    completed = data.completed
+                })
+                .then(() => {
+                    saveButton.style.display = "none"
+                    cancelButton.style.display = "none"
+                })
+            } 
+        }
 
-            
-        } 
+        
     }
 
     function toggleHandler() {
-        fetch(`${api_url}/todo/me`, {
+        if (anonymous) {
+            let todos = JSON.parse(localStorage.getItem("todos"))
+            const objIndex = todos.findIndex((todo => todo.id == id)) 
+            todos[objIndex].completed = completed
+            localStorage.setItem("todos", JSON.stringify(todos))
+        } else {
+            fetch(`${api_url}/todo/me`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -51,6 +66,8 @@
             credentials: "include",
             body: JSON.stringify({"id": id, "details": oldDetails, "completed": completed})
         })
+        }
+        
     }
 
     function deleteHandler(e) {

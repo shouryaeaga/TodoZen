@@ -12,52 +12,63 @@
 
     let loading = true
 
+    let anonymous = false
+
     let todoDetail = ""
 
     let toggle_account_popup
 
     let user = {};
     let username = ""
-    function refresh() {
-        return fetch(`${api_url}/auth/refresh`, {
+    function refresh(todoReq) {
+        fetch(`${api_url}/auth/refresh`, {
             method: "POST",
             credentials: "include",
         })
         .then((response) => {
             if (response.status === 401) {
-                if (browser) {
-                    window.location.href = "/auth/login?context=home"
-                }
-            } else {
-                loading = false
+                anonymous = true
+                todoReq()
             }
+            todoReq()
             return response.json()
         })
         .then((data) => {
-            user = data.user;
-            username = (user.username).charAt(0).toUpperCase() + (user.username).slice(1)
-        })
-        .catch((err) => {
-            console.log(err)
+            if (data.user) {
+                user = data.user;
+                username = (user.username).charAt(0).toUpperCase() + (user.username).slice(1)
+            }
         })
     }
 
     function getTodos() {
-        return fetch(`${api_url}/todo/me`, {
-            method: "GET",
-            credentials: "include",
-        })
-       .then((response) => response.json())
-       .then((data) => {
-            todos = data
+        if (anonymous === false) {
+            fetch(`${api_url}/todo/me`, {
+                method: "GET",
+                credentials: "include",
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                todos = data
+                loading = false
+            })
+        } else {
+            todos = JSON.parse(localStorage.getItem("todos"))
+            if (todos == null || todos.length == 0) {
+                todos = []
+            }
+
+            loading = false
         }
-    )}
+    }
 
     function addTodo(e) {
         e.preventDefault()
         if (todoDetail.length > 512) {
             alert("Todo cannot be longer than 512 characters")
-        } else{
+            return
+        } 
+        if (!anonymous) {
             fetch(`${api_url}/todo/me`, {
                 method: "POST",
                 credentials: "include",
@@ -74,6 +85,10 @@
                 todoDetail = ""
             })
             .catch((err) => console.log(err))
+        } else {
+            const newTodo = {id: crypto.randomUUID(), anonymous: true, details: todoDetail, completed: false}
+            todos = [...todos, newTodo]
+            localStorage.setItem("todos", JSON.stringify(todos))
         }
         
     }
@@ -106,36 +121,50 @@
     }
 
     function deleteHandler(todo, todo_id) {
-        fetch(`${api_url}/todo/me`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({"id": todo_id})
-        })
-        .then(response => response.json())
-        .then(data => {
-            
+        if (anonymous) {
             todos = todos.filter(todoItem => todoItem !== todo)
-        })
+            localStorage.setItem("todos", JSON.stringify(todos))
+        } else {
+            fetch(`${api_url}/todo/me`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({"id": todo_id})
+            })
+            .then(response => response.json())
+            .then(data => {
+                todos = todos.filter(todoItem => todoItem !== todo)
+                localStorage.setItem("todos", JSON.stringify(todos))
+            })
+        }
+        
     }
     
     function documentClickEvent(event) {
-        const isOutsideMenuPopup = !account_popup.contains(event.target)
-        const isOutsideMenuPopupButton = !toggle_account_popup.contains(event.target)
-        if (isOutsideMenuPopup && isOutsideMenuPopupButton) {
-            if (account_popup.style.display === "block") {
-                account_popup.style.display = "none"
+        if (!anonymous) {
+            const isOutsideMenuPopup = !account_popup.contains(event.target)
+            const isOutsideMenuPopupButton = !toggle_account_popup.contains(event.target)
+            if (isOutsideMenuPopup && isOutsideMenuPopupButton) {
+                if (account_popup.style.display === "block") {
+                    account_popup.style.display = "none"
+                }
             }
+        }
+        
+    }
+
+    function loginRedirect() {
+        if (browser) {
+            window.location.href = "/auth/login"
         }
     }
 
     onMount(async () => {
-        await refresh()
+        await refresh(getTodos)
         const refreshInterval = setInterval(refresh, 870000)
 
-        getTodos()
         return () => {
             clearInterval(refreshInterval)
         }
@@ -149,6 +178,9 @@ loading...
 {:else}
 
 <nav>
+    {#if anonymous}
+    <button on:click={loginRedirect} id="loginButton">Login</button>
+    {:else}
     <button on:click={toggleAccountPopup} bind:this={toggle_account_popup} id="togglePopupButton">{username}</button>
 
     <div id="account-popup" bind:this={account_popup} style="none">
@@ -157,6 +189,8 @@ loading...
         <p>Email: {user.email}</p>
         <button on:click={logout} id="logout-button">Logout</button>
     </div>
+    {/if}
+    
     
 </nav>
 
@@ -176,16 +210,21 @@ loading...
 {#if todos.length > 0}
 <div id="todos">
     {#each todos as todo, index (todo.id)}
-        <Todo onDelete={deleteHandler} todo={todo} index={index} completed={todo.completed} details={todo.details} id={todo.id} />
+        
+        <Todo onDelete={deleteHandler} anonymous={anonymous} todo={todo} index={index} completed={todo.completed} details={todo.details} id={todo.id} />
         <br>
     {/each}
 </div>
 {:else}
-<p>No todos yet</p>
+<p id="no-todo-message">No todos yet</p>
 {/if}
 {/if}
 
 <style>
+
+    #no-todo-message {
+        text-align: center;
+    }
 
     #logout-button {
         background-color: #c7bebe;
