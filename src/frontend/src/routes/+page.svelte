@@ -1,4 +1,5 @@
 <script>
+    import CircularProgress from '@smui/circular-progress'
     import {onMount} from 'svelte'
     import {browser} from '$app/environment'
     import Todo from '$lib/Todo.svelte'
@@ -174,7 +175,14 @@
 <svelte:document on:click={documentClickEvent} />
 
 {#if loading}
-loading...
+<div style="position: relative; height: 100%;">
+    <CircularProgress style="margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); height: 32px; width: 32px;" indeterminate/>
+</div>
+
 {:else}
 
 <nav>
@@ -211,7 +219,7 @@ loading...
 <div id="todos">
     {#each todos as todo, index (todo.id)}
         
-        <Todo onDelete={deleteHandler} anonymous={anonymous} todo={todo} index={index} completed={todo.completed} details={todo.details} id={todo.id} />
+        <Todo onDelete={deleteHandler} anonymous={anonymous} todo={todo} completed={todo.completed} details={todo.details} id={todo.id} />
         <br>
     {/each}
 </div>
@@ -284,5 +292,10 @@ loading...
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    :global(body), :global(html) {
+        height: 100%;
+        width: 100%;
     }
 </style>
