@@ -13,7 +13,7 @@ A working version can be found on https://todo.shouryaeaga.com
 
 ## Technologies Used
 
-- Frontend: Svelte and Material UI (WIP)
+- Frontend: Svelte and Picocss (WIP)
 - Backend: Node.js, Express
 - Database: PostgreSQL
 - Authentication: JWT (JSON Web Tokens)
