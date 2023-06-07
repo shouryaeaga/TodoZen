@@ -83,7 +83,12 @@
 
 <nav class="container-fluid">
     <ul>
-        <li>Todo</li>
+        <li>TodoZen</li>
+    </ul>
+    <ul>
+        <li>
+            <a href="/">Home</a>
+        </li>
     </ul>
 </nav>
 

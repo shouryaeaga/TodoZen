@@ -11,7 +11,6 @@
 
     import {browser} from '$app/environment'
     import {onMount} from 'svelte'
-    import { page } from '$app/stores'
 
     let loading = true
     let error = false
@@ -42,6 +41,7 @@
     const api_url = apiUrl.apiUrl
 
     const submitHandler = (e) => {
+        console.log("submitting")
         e.preventDefault();
         if (password !== password_confirmation) {
             message = "Passwords do not match"
@@ -65,7 +65,7 @@
         })
         .then(res => {
             if (res.status == 500) {
-                message = "Internal server error"
+                message = "Internal server error, please contact no-reply@shouryaeaga.com"
             }
             return res.json()
         })
@@ -78,7 +78,10 @@
             }
             message = data.msg
         })
-        .catch((err) => console.log(err))
+        .catch((err) => {
+            console.log(err)
+            message = "Internal server error, please contact no-reply@shouryaeaga.com"
+        })
         }
         
     }
@@ -110,11 +113,17 @@
             password_confirmation_box.setAttribute("aria-invalid", false)
         }
     }
+
 </script>
 
 <nav class="container-fluid">
     <ul>
-        <li>Todo</li>
+        <li>TodoZen</li>
+    </ul>
+    <ul>
+        <li>
+            <a href="/">Home</a>
+        </li>
     </ul>
 </nav>
 
@@ -127,16 +136,22 @@
     <article class="grid">
         <div>
             <form>
-                <input type="text" name="username" id="usernameInput" bind:value={username} placeholder="Username" required>
-                <br>
-                <input type="email" name="email" id="emailInput" bind:value={email} placeholder="Email" required>
+                <hgroup>
+                    <h1>Sign Up</h1>
+                </hgroup>
+
+                <div class="container-fluid">
+                    <input type="text" style="width: 97%;" name="username" id="usernameInput" bind:value={username} placeholder="Username" required>
+                </div>
+                <div class="container-fluid">
+                    <input type="email" style="width: 97%;" name="email" id="emailInput" bind:value={email} placeholder="Email" required>
+                </div>
+                
                 
                 <div class="container-fluid" id="password">
                     <div>
-                        <div style="display: flex;">
-                            <input type="password" style="margin-right: 5px;" name="password" id="passwordInput" on:change={passwordChange()} placeholder="Password" bind:value={password} bind:this={password_box} required>
-                            <a role="button" href="#p" style="width: 62px; height: 62px;" on:click={toggleVisibility}><i class="fa-solid fa-eye"></i></a>
-                        </div>
+                        <input type="password" style="margin-right: 2%; width: 80%;" name="password" id="passwordInput" on:change={passwordChange} placeholder="Password" bind:value={password} bind:this={password_box} required>
+                        <a role="button" href="#p" style="width: 15%;" on:click={toggleVisibility}><i class="fa-solid fa-eye"></i></a>
                         
                     </div>
                     
@@ -145,24 +160,20 @@
                 
                 <div class="container-fluid" id="password">
                     <div>
-                        <div style="display: flex;">
-                            <input type="password" style="margin-right: 5px;" name="password_confirm" id="passwordConfirmInput" on:change={passwordChange()} placeholder="Confirmation" bind:value={password_confirmation} bind:this={password_confirmation_box} required>
-                            <a role="button" href="#p" style="width: 62px; height: 62px;" on:click={toggleVisibilityConfirm}><i class="fa-solid fa-eye"></i></a>
-                        </div>
+                        <input type="password" style="margin-right: 2%; width: 80%;" name="password_confirm" id="passwordConfirmInput" on:change={passwordChange} placeholder="Confirmation" bind:value={password_confirmation} bind:this={password_confirmation_box} required>
+                        <a role="button" href="#p" style="width: 15%;" on:click={toggleVisibilityConfirm}><i class="fa-solid fa-eye"></i></a>
                     </div>
                 </div>
 
-                <div class="container">
-                    <input type="submit" id="submitButton" on:click={submitHandler} value="Register">
-                </div>
+                <input type="submit" id="submitButton" on:click={submitHandler} value="Register">
                 
     
             </form>
             <p id="message">
                 {message}
             </p>
-            <div class="grid">
-                <div><a role="button" on:click={() => {if (browser ) {window.location.href = "/auth/login"}}} href="/auth/login">Already registered? Login now</a></div>
+            <div class="container-fluid">
+                <div><a style="width: 100%;" role="button" href="/auth/login">Already registered? Login now</a></div>
             </div>
             
         </div>

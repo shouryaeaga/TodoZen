@@ -165,7 +165,7 @@
 {#if anonymous}
     <nav class="container-fluid">
         <ul>
-            <li>Todo</li>
+            <li>TodoZen</li>
         </ul>
         <ul>
             <li><a role="button" href="#login" on:click={loginRedirect} id="loginButton">Login</a></li>
@@ -174,13 +174,12 @@
 {:else}
     <nav class="container-fluid">
         <ul>
-            <li>Todo</li>
+            <li>TodoZen</li>
         </ul>
         <ul>
             <li>
                 <a role="button" href="#account" on:click={toggleAccountPopup} bind:this={toggle_account_popup} id="togglePopupButton">{username}</a>
             </li>
-            
         </ul>
     </nav>
 {/if}

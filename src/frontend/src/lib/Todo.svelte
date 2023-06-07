@@ -98,36 +98,40 @@
 
 <div id="container">
     
-    <div class="grid">
-        <div><input type="text" name="details" id="details" bind:this={detailsInput} bind:value={details} on:input={areTheyTheSame} readonly /></div>
+    <div class="container-fluid">
+        <div>
+            <input style="width: 90%;" type="text" name="details" id="details" bind:this={detailsInput} bind:value={details} on:input={areTheyTheSame} readonly />
         
-        <div><input type="checkbox" name="completed" id="completed" bind:checked={completed} on:change={toggleHandler}> 
-            <p id="label">Completed</p></div>
-        
-        <div><button on:click={deleteHandler}><i class="fa-solid fa-trash"></i></button></div>
-        
-        <div><button on:click={editHandler}><i class="fa-solid fa-pen-to-square"></i></button></div>
-
-        <dialog id="edit-modal" bind:this={edit_modal}>
-            <article id="account-popup">
-                <header>
-                    <a href="#close" aria-label="Close" class="close" on:click={edit_modal.close()}></a>
-                    <h3>Edit todo</h3>
-                </header>
-                <form>
-                    <input type="text" name="detail-edit" id="detail-edit" placeholder={details} bind:value={details}>
-                </form>
-                <footer>
-                    <a href="#cancel" on:click={cancelHandler} role="button">Cancel</a>
-                    <a href="#save" on:click={changeHandler} role="button">Save</a>
-                </footer>
+            <input type="checkbox" name="completed" id="completed" data-tooltip="Complete" bind:checked={completed} on:change={toggleHandler}> 
+            
+            <div class="container-fluid">
+                <div>
+                    <a style="width: 47%; margin-right: 5px;" href="#delete" role="button" on:click={deleteHandler}><i class="fa-solid fa-trash"></i></a>
+                    <a style="width: 47%;" href="#edit" role="button" data-tooltip="Edit" on:click={editHandler}><i class="fa-solid fa-pen-to-square"></i></a>
+                </div>
                 
-            </article>
-        </dialog>
+            </div>
+            
+        </div>
         
     </div>
         
-    
+    <dialog id="edit-modal" bind:this={edit_modal}>
+        <article id="account-popup">
+            <header>
+                <a href="#close" aria-label="Close" class="close" on:click={edit_modal.close()}></a>
+                <h3>Edit todo</h3>
+            </header>
+            <form>
+                <input type="text" name="detail-edit" id="detail-edit" placeholder={details} bind:value={details}>
+            </form>
+            <footer>
+                <a href="#cancel" on:click={cancelHandler} role="button">Cancel</a>
+                <a href="#save" on:click={changeHandler} role="button">Save</a>
+            </footer>
+            
+        </article>
+    </dialog>
     
     
 </div>

@@ -84,7 +84,12 @@
 
 <nav class="container-fluid">
     <ul>
-        <li>Todo</li>
+        <li>TodoZen</li>
+    </ul>
+    <ul>
+        <li>
+            <a href="/">Home</a>
+        </li>
     </ul>
 </nav>
 
@@ -96,7 +101,7 @@
     {:else}
     <article id="content">
         <div>
-            <form>
+            <form method="post">
                 <hgroup>
                     <h1>Login</h1>
                     {#if context == "home"}
@@ -114,23 +119,27 @@
                     {/if}
                 </hgroup>
     
-                
-                <input id="usernameInput" type="text" aria-label="Username" name="username" placeholder="Username" bind:value={username} required/>
-                <div class="container">
+                <div class="container-fluid">
                     <div>
-                        <div style="display: flex;">
-                            <input type="password" style="margin-right: 5px;" name="password" aria-label="Password" id="passwordInput" placeholder="Password" bind:value={password} bind:this={password_box} required>
-                            <a role="button" href="#p" style="width: 62px; height: 62px;" on:click={toggleVisibility}><i class="fa-solid fa-eye"></i></a>
-                        </div>
-                        
+                        <input id="usernameInput" style="width: 97%;" type="text" aria-label="Username" name="username" placeholder="Username" bind:value={username} required/>
+                    </div>
+                </div>
+                
+                
+                <div class="container-fluid">
+                    <div>
+                        <input type="password" style="margin-right: 2%; width: 80%;" name="password" aria-label="Password" id="passwordInput" placeholder="Password" bind:value={password} bind:this={password_box} required>
+                        <a role="button" href="#p" style="width: 15%;" on:click={toggleVisibility}><i class="fa-solid fa-eye"></i></a>
                     </div>
                     
                 </div>
                 <input id="submitButton" type="submit" value="Login" on:click={submitHandler}/>
                 <p id="message">{message}</p>
-                <div class="grid">
-                    <div><a role="button" href="/auth/password-reset">Forgot password?</a></div>
-                    <div><a role="button" href="/auth/register">Register Now</a></div>
+                <div class="container-fluid">
+                    <div>
+                        <a style="width: 48%; margin-right: 2%;" role="button" href="/auth/password-reset">Forgot password?</a> 
+                        <a style="width: 48%;" role="button" href="/auth/register">Register Now</a>
+                    </div>
                     
                 </div>
                 
