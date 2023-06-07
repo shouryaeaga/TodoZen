@@ -11,6 +11,8 @@
 
     import {browser} from '$app/environment'
     import {onMount} from 'svelte'
+    import { page } from '$app/stores'
+
     let loading = true
     let error = false
 
@@ -96,106 +98,76 @@
             password_confirmation_box.type = "password"
         }
     }
+
+    function passwordChange() {
+        if (password !== password_confirmation) {
+            password_confirmation_box.setAttribute("aria-invalid", true)
+        } else if (password.length < 8 || password.length > 24 || /\d/.test(password) === false || /[a-zA-Z]/g.test(password) === false) {
+            password_box.setAttribute("aria-invalid", true)
+            password_confirmation_box.setAttribute("aria-invalid", true)
+        } else {
+            password_box.setAttribute("aria-invalid", false)
+            password_confirmation_box.setAttribute("aria-invalid", false)
+        }
+    }
 </script>
 
-{#if loading}
-Loading...
-{:else if error}
-There was an error, please contact support@shouryaeaga.com
-{:else}
+<nav class="container-fluid">
+    <ul>
+        <li>Todo</li>
+    </ul>
+</nav>
 
-<div id="menu">
-    <div id="content">
-        <form>
-            <input type="text" name="username" id="usernameInput" bind:value={username} placeholder="Username" required>
-            <br>
-            <input type="email" name="email" id="emailInput" bind:value={email} placeholder="Email" required>
-            
-            <br>
-            
-            <div id="password">
-                <input type="password" name="password" id="passwordInput" placeholder="Password" bind:value={password} bind:this={password_box} required>
-                <button on:click={toggleVisibility}>Show</button>
-            </div>
-            
-            
-            <br>
-            
-            <div id="password">
-                <input type="password" name="password_confirm" id="passwordConfirmInput" placeholder="Confirmation" bind:value={password_confirmation} bind:this={password_confirmation_box} required>
+<main class="container">
+    {#if loading}
+    Loading...
+    {:else if error}
+    There was an error, please contact support@shouryaeaga.com
+    {:else}
+    <article class="grid">
+        <div>
+            <form>
+                <input type="text" name="username" id="usernameInput" bind:value={username} placeholder="Username" required>
+                <br>
+                <input type="email" name="email" id="emailInput" bind:value={email} placeholder="Email" required>
                 
-                <button on:click={toggleVisibilityConfirm}>Show</button>
-            </div>
-            
+                <div class="container-fluid" id="password">
+                    <div>
+                        <div style="display: flex;">
+                            <input type="password" style="margin-right: 5px;" name="password" id="passwordInput" on:change={passwordChange()} placeholder="Password" bind:value={password} bind:this={password_box} required>
+                            <a role="button" href="#p" style="width: 62px; height: 62px;" on:click={toggleVisibility}><i class="fa-solid fa-eye"></i></a>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                </div>
+                
+                <div class="container-fluid" id="password">
+                    <div>
+                        <div style="display: flex;">
+                            <input type="password" style="margin-right: 5px;" name="password_confirm" id="passwordConfirmInput" on:change={passwordChange()} placeholder="Confirmation" bind:value={password_confirmation} bind:this={password_confirmation_box} required>
+                            <a role="button" href="#p" style="width: 62px; height: 62px;" on:click={toggleVisibilityConfirm}><i class="fa-solid fa-eye"></i></a>
+                        </div>
+                    </div>
+                </div>
 
-            <input type="submit" id="submitButton" on:click={submitHandler} value="Register">
-
+                <div class="container">
+                    <input type="submit" id="submitButton" on:click={submitHandler} value="Register">
+                </div>
+                
+    
+            </form>
             <p id="message">
                 {message}
             </p>
-            <a href="/auth/login">Already registered? Login now</a>
-        </form>
-        
-    </div>
-</div>
+            <div class="grid">
+                <div><a role="button" on:click={() => {if (browser ) {window.location.href = "/auth/login"}}} href="/auth/login">Already registered? Login now</a></div>
+            </div>
+            
+        </div>
+    </article>
+    {/if}
+</main>
 
-{/if}
 
-<style>
-    button {
-        background-color: #e9e2e2;
-        border-radius: 10px;
-        border: 2px solid #e9e2e2;
-        padding: 5px;
-        margin: 5px;
-        cursor: pointer;
-    }
-
-    #password {
-        display: flex;
-        position: relative; 
-        width: 100%;
-    }
-    #menu {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        
-    }
-
-    #content {
-        border: 1px solid #333;
-        padding: 5px;
-        box-shadow: 10px 10px 10px #888;
-        border-radius: 10px;
-        width: 250px;
-    }
-
-    #usernameInput, #passwordInput, #emailInput, #passwordConfirmInput {
-        background-color: #e9e2e2;
-        padding: 10px;
-        border-radius: 10px;
-        width: 80%;
-        margin: 10px;
-        border: none;
-    }
-
-    #submitButton {
-        background-color: #e9e2e2;
-        border-radius: 10px;
-        border: 2px solid #e9e2e2;
-        padding: 10px;
-        margin: 10px;
-        cursor: pointer;
-    }
-    form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    a {
-        text-decoration: none;
-    }
-</style>

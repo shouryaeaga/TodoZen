@@ -7,6 +7,8 @@
     let password1 = ""
     let password2 = ""
     let email = ""
+    let password_box;
+    let password_confirmation_box
     import apiUrl from '$lib/appConfig'
 
     const api_url = apiUrl.apiUrl
@@ -65,65 +67,54 @@
         })
     }
 
+    function passwordChange() {
+        if (password1 !== password2) {
+            password_confirmation_box.setAttribute("aria-invalid", true)
+        } else if (password1.length < 8 || password1.length > 24 || /\d/.test(password1) === false || /[a-zA-Z]/g.test(password1) === false) {
+            password_box.setAttribute("aria-invalid", true)
+            password_confirmation_box.setAttribute("aria-invalid", true)
+        } else {
+            password_box.setAttribute("aria-invalid", false)
+            password_confirmation_box.setAttribute("aria-invalid", false)
+        }
+    }
+
 </script>
-<div id="menu">
-    <div id="content">
-        {#if !token}
 
-        <span>Enter your email and we will send a link to reset it</span>
-        <form on:submit={emailPasswordReset}>
-            <input type="email" bind:value={email} name="email" id="email" placeholder="Enter your email">
-            <input type="submit" value="Submit">
-            <p id="message">{message}</p>
-        </form>
+<nav class="container-fluid">
+    <ul>
+        <li>Todo</li>
+    </ul>
+</nav>
+
+<main class="container">
+    <article class="grid">
+        <div>
+            {#if !token}
+            <hgroup>
+                <h1>Enter your email and we will send a link to reset it</h1>
+            </hgroup>
+            
+            <form on:submit={emailPasswordReset}>
+                <input type="email" bind:value={email} name="email" id="email" placeholder="Enter your email">
+                <input type="submit" value="Submit">
+                <p id="message">{message}</p>
+            </form>
 
 
-        {:else}
-        <h3>Enter your new password</h3>
-        <form on:submit={passwordReset}>
-            <input type="password" name="password1" id="password1" placeholder="Password" bind:value={password1}>
-            <input type="password" name="password2" id="password2" placeholder="Confirm password" bind:value={password2}>
-            <input type="submit" value="Set password">
-            <p id="message">{message}</p>
-        </form>
-        {/if}
-    </div>
-</div>
-
-<style>
-    #menu {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-    }
-    span {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    #content {
-        border: 1px solid #333;
-        padding: 50px;
-        box-shadow: 10px 10px 10px #888;
-        border-radius: 10px;
-        text-align: center;
-    }
-
-    #email, #password1, #password2 {
-        background-color: #e9e2e2;
-        padding: 10px;
-        border-radius: 10px;
-        width: 80%;
-        margin: 10px;
-        border: none;
-    }
-
-    input[type=submit] {
-        background-color: #e9e2e2;
-        border-radius: 10px;
-        border: 2px solid #e9e2e2;
-        padding: 10px;
-        margin: 10px;
-        cursor: pointer;
-    }
-</style>
+            {:else}
+            <hgroup>
+                <h1>Enter your new password</h1>
+            </hgroup>
+            
+            <form on:submit={passwordReset}>
+                <input type="password" name="password1" id="password1" placeholder="Password" on:change={passwordChange()} bind:value={password1} bind:this={password_box}>
+                <input type="password" name="password2" id="password2" placeholder="Confirm password" on:change={passwordChange()} bind:value={password2} bind:this={password_confirmation_box}>
+                <input type="submit" value="Set password">
+                <p id="message">{message}</p>
+            </form>
+            {/if}
+        </div>
+        
+    </article>
+</main>
