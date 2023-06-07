@@ -82,114 +82,72 @@
     }
 </script>
 
-{#if loading}
+<nav class="container-fluid">
+    <ul>
+        <li>TodoZen</li>
+    </ul>
+    <ul>
+        <li>
+            <a href="/">Home</a>
+        </li>
+    </ul>
+</nav>
+
+<main class="container">
+    {#if loading}
     Loading...
-{:else if error}
-    There was an error, please contact support@shouryaeaga.com
-{:else}
-<br>
-
-<div id="menu">
-    <div id="content">
-        
-        <form>
-            {#if context == "home"}
-            You are unauthorized to view that page. Please login
-            {/if}
-            {#if context == "password-reset"}
-            Your password has been reset. Please login
-            {/if}
-            {#if context == "signup"}
-            Successfully created an account. Please login
-            {/if}
-            <input id="usernameInput" type="text" name="username" placeholder="Username" bind:value={username} required/>
-            <br>
-            <div id="password">
-                <input type="password" name="password" id="passwordInput" placeholder="Password" bind:value={password} bind:this={password_box} required>
-                <button on:click={toggleVisibility}>Show</button>
-            </div>
-            <br>
-            <input id="submitButton" type="submit" value="Login" on:click={submitHandler}/>
-            <p id="message">{message}</p>
-            <div id="links">
-                <a href="/auth/password-reset">Forgot password?</a>
-                <br>
-                <br>
-                <a href="/auth/register">Register Now</a>
-            </div>
-            
-        </form>
-        
-    </div>
+    {:else if error}
+        There was an error, please contact support@shouryaeaga.com
+    {:else}
+    <article id="content">
+        <div>
+            <form method="post">
+                <hgroup>
+                    <h1>Login</h1>
+                    {#if context == "home"}
+                    <h2>You are unauthorized to view that page. Please login</h2>
+                    {/if}
+                    {#if context == "password-reset"}
+                    <h2>
+                    Your password has been reset. Please login
+                    </h2>
     
-</div>
-{/if}
-
-
-<style>
-    #password {
-        display: flex;
-        position: relative; 
-        width: 100%;
-    }
-    a {
-        margin: 10px;
-        text-align: center;
-    }
-    #menu {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
-    }
-
-    #content {
-        border: 1px solid #333;
-        padding: 50px;
-        box-shadow: 10px 10px 10px #888;
-        border-radius: 10px;
+                    {/if}
+                    {#if context == "signup"}
+                    <h2>Successfully created an account. Please login</h2>
+                    
+                    {/if}
+                </hgroup>
+    
+                <div class="container-fluid">
+                    <div>
+                        <input id="usernameInput" style="width: 97%;" type="text" aria-label="Username" name="username" placeholder="Username" bind:value={username} required/>
+                    </div>
+                </div>
+                
+                
+                <div class="container-fluid">
+                    <div>
+                        <input type="password" style="margin-right: 2%; width: 80%;" name="password" aria-label="Password" id="passwordInput" placeholder="Password" bind:value={password} bind:this={password_box} required>
+                        <a role="button" href="#p" style="width: 15%;" on:click={toggleVisibility}><i class="fa-solid fa-eye"></i></a>
+                    </div>
+                    
+                </div>
+                <input id="submitButton" type="submit" value="Login" on:click={submitHandler}/>
+                <p id="message">{message}</p>
+                <div class="container-fluid">
+                    <div>
+                        <a style="width: 48%; margin-right: 2%;" role="button" href="/auth/password-reset">Forgot password?</a> 
+                        <a style="width: 48%;" role="button" href="/auth/register">Register Now</a>
+                    </div>
+                    
+                </div>
+                
+            </form>
+        </div>
         
-    }
+        
+    </article>
+    {/if}
+</main>
 
-    #usernameInput, #passwordInput {
-        background-color: #e9e2e2;
-        padding: 10px;
-        border-radius: 10px;
-        width: 80%;
-        margin: 10px;
-        border: none;
-    }
-
-    #submitButton {
-        background-color: #e9e2e2;
-        border-radius: 10px;
-        border: 2px solid #e9e2e2;
-        padding: 10px;
-        margin: 10px;
-        cursor: pointer;
-    }
-    form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-    }
-    a {
-        text-decoration: none;
-    }
-    #links {
-        display: flex;
-        justify-content: center;
-        align-content: center;
-    }
-
-    button {
-        background-color: #e9e2e2;
-        border-radius: 10px;
-        border: 2px solid #e9e2e2;
-        padding: 5px;
-        margin: 5px;
-        cursor: pointer;
-    }
-</style>

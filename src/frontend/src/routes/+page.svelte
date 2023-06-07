@@ -1,5 +1,4 @@
 <script>
-    import CircularProgress from '@smui/circular-progress'
     import {onMount} from 'svelte'
     import {browser} from '$app/environment'
     import Todo from '$lib/Todo.svelte'
@@ -112,13 +111,7 @@
     }
 
     function toggleAccountPopup() {
-        if (document.getElementById("account-popup").style.display === "none") {
-            document.getElementById("account-popup").style.display = "block"
-        } else if (document.getElementById("account-popup").style.display === "") {
-            document.getElementById("account-popup").style.display = "block"
-        } else {
-            document.getElementById("account-popup").style.display = "none"
-        }
+        account_popup.showModal()
     }
 
     function deleteHandler(todo, todo_id) {
@@ -142,19 +135,6 @@
         }
         
     }
-    
-    function documentClickEvent(event) {
-        if (!anonymous) {
-            const isOutsideMenuPopup = !account_popup.contains(event.target)
-            const isOutsideMenuPopupButton = !toggle_account_popup.contains(event.target)
-            if (isOutsideMenuPopup && isOutsideMenuPopupButton) {
-                if (account_popup.style.display === "block") {
-                    account_popup.style.display = "none"
-                }
-            }
-        }
-        
-    }
 
     function loginRedirect() {
         if (browser) {
@@ -172,130 +152,81 @@
     })
 </script>
 
-<svelte:document on:click={documentClickEvent} />
-
 {#if loading}
-<div style="position: relative; height: 100%;">
-    <CircularProgress style="margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); height: 32px; width: 32px;" indeterminate/>
-</div>
+<main class="container">
+    <div aria-busy="true">
 
+    </div>
+</main>
+    
+    
 {:else}
 
-<nav>
-    {#if anonymous}
-    <button on:click={loginRedirect} id="loginButton">Login</button>
-    {:else}
-    <button on:click={toggleAccountPopup} bind:this={toggle_account_popup} id="togglePopupButton">{username}</button>
+{#if anonymous}
+    <nav class="container-fluid">
+        <ul>
+            <li>TodoZen</li>
+        </ul>
+        <ul>
+            <li><a role="button" href="#login" on:click={loginRedirect} id="loginButton">Login</a></li>
+        </ul>
+    </nav>
+{:else}
+    <nav class="container-fluid">
+        <ul>
+            <li>TodoZen</li>
+        </ul>
+        <ul>
+            <li>
+                <a role="button" href="#account" on:click={toggleAccountPopup} bind:this={toggle_account_popup} id="togglePopupButton">{username}</a>
+            </li>
+        </ul>
+    </nav>
+{/if}
 
-    <div id="account-popup" bind:this={account_popup} style="none">
-        <h1>Account</h1>
-        <p>Username: {user.username}</p>
-        <p>Email: {user.email}</p>
-        <button on:click={logout} id="logout-button">Logout</button>
-    </div>
+<main class="container">
+
+    {#if !anonymous}
+    <dialog id="account-modal" bind:this={account_popup}>
+        <article id="account-popup">
+            <header>
+                <a href="#close" aria-label="Close" class="close" on:click={account_popup.close()}></a>
+                <h3>Account</h3>
+            </header>
+            <p>Username: {user.username}</p>
+            <p>Email: {user.email}</p>
+            <footer>
+                <a href="#logout" on:click={logout} role="button" id="logout-button">Logout</a>
+            </footer>
+            
+        </article>
+    </dialog>
     {/if}
     
-    
-</nav>
-
-
-<br>
-
-<div id="createForm">
-    
-    <form on:submit={addTodo}>
-        <input type="text" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Make coffee" required>
+    <div id="createForm">
         
-        <input type="submit" value="Add Task" id="formSubmit">
-    </form>
-</div>
+        <form on:submit={addTodo}>
+            <div class="grid">
+                <div><input type="text" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Make coffee" required></div>
+                <div><input type="submit" value="Add Task" id="formSubmit"></div>
+            </div>
+        </form>
+    </div>
+    
+    <hr>
+    
+    {#if todos.length > 0}
+    <div id="todos">
+        {#each todos as todo, index (todo.id)}
+            
+            <Todo onDelete={deleteHandler} anonymous={anonymous} todo={todo} completed={todo.completed} details={todo.details} id={todo.id} />
+            <hr>
+        {/each}
+    </div>
+    {:else}
+    <p id="no-todo-message">No todos yet</p>
+    {/if}
 
-
-{#if todos.length > 0}
-<div id="todos">
-    {#each todos as todo, index (todo.id)}
-        
-        <Todo onDelete={deleteHandler} anonymous={anonymous} todo={todo} completed={todo.completed} details={todo.details} id={todo.id} />
-        <br>
-    {/each}
-</div>
-{:else}
-<p id="no-todo-message">No todos yet</p>
+    
+</main>
 {/if}
-{/if}
-
-<style>
-
-    #no-todo-message {
-        text-align: center;
-    }
-
-    #logout-button {
-        background-color: #c7bebe;
-    }
-
-    #account-popup {
-        background-color: #e9e2e2;
-        display: none;
-        margin: 0;
-        position: absolute;
-        z-index: 2;
-        padding: 10px;
-        border-radius: 5%;
-        border: solid 1px #333;
-    }
-
-    #formSubmit, button {
-        background-color: #e9e2e2;
-        border-radius: 10px;
-        border: 2px solid #e9e2e2;
-        padding: 10px;
-        margin: 10px;
-        cursor: pointer;
-    }
-
-    #formSubmit:hover, button:hover {
-        border: 2px solid #333;
-    }
-
-    #todos {
-        margin: auto;
-        width: 100%;
-
-    }
-
-    /* Centre horizontally */
-    #createForm {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    #detailsInput {
-        border-radius: 10px;
-        border: none;
-        padding: 15px;
-        font-size: 1rem;
-        display: block;
-        width: 75%;
-        margin: 10px;
-        background-color: #e9e2e2;
-        font-weight: 200;
-    }
-    form {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    :global(body), :global(html) {
-        height: 100%;
-        width: 100%;
-    }
-</style>

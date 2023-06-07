@@ -162,10 +162,11 @@ const logout = (req, res) => {
 }
 
 const forgotPassword = async (req, res) => {
-    const {email} = req.body
+    let {email} = req.body
     if (!email) {
         return res.status(400).json({msg:"Must send email"})
     }
+    email = email.toLowerCase()
     try {
         const query = "SELECT * FROM users WHERE email = $1"
         const results = await db.query(query, [email])
