@@ -2,7 +2,6 @@
     import {onMount} from 'svelte'
     import {browser} from '$app/environment'
     import Todo from '$lib/Todo.svelte'
-    import Settings from '$lib/Settings.svelte';
 
     import apiUrl from '$lib/appConfig'
     const api_url = apiUrl.apiUrl
