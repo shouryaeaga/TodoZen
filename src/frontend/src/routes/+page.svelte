@@ -253,14 +253,7 @@
                     <hr>
                 {:else}
                     <h2>Select Theme</h2>
-                    <details role="list">
-                        <summary aria-haspopup="listbox" role="button" class="secondary">Theme</summary>
-                        <ul role="listbox">
-                            <li><a href="#" data-theme-switcher="auto">Auto</a></li>
-                            <li><a href="#" data-theme-switcher="light">Light</a></li>
-                            <li><a href="#" data-theme-switcher="dark">Dark</a></li>
-                        </ul>
-                    </details>
+                    <a class="contrast theme-switcher" role="button" href="#">Toggle theme</a>
                     
                 {/if}
             </div>
