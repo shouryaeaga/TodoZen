@@ -13,11 +13,11 @@
 
 <article>
     <header>
-        <h1>Settings</h1>
+        <h2>Settings</h2>
         {#if page === "account"}
-        <h3>Account</h3>
+        <h4>Account</h4>
         {:else}
-        <h3>Theme</h3>
+        <h4>Theme</h4>
         {/if}
     </header>
     <div class="container">
@@ -29,29 +29,28 @@
                 </ul>
             </nav>
         </aside>
-        <div class="container">
-            {#if page === "account"}
-                <h2>Change username</h2>
-                WIP
-                <hr>
-                <h2>Change email</h2>
-                WIP
-                <hr>
-                <h2>Reset password</h2>
-                WIP
-                <hr>
-            {:else}
-                <h2>Select Theme</h2>
-                <details role="list">
-                    <ul role="listbox">
-                        <li><a href="#" data-theme-switcher="auto">Auto</a></li>
-                        <li><a href="#" data-theme-switcher="light">Light</a></li>
-                        <li><a href="#" data-theme-switcher="dark">Dark</a></li>
-                    </ul>
-                </details>
-                
-            {/if}
-        </div>
+        {#if page === "account"}
+            <h2>Change username</h2>
+            WIP
+            <hr>
+            <h2>Change email</h2>
+            WIP
+            <hr>
+            <h2>Reset password</h2>
+            WIP
+            <hr>
+        {:else}
+            <h2>Select Theme</h2>
+            <details role="list">
+                <summary aria-haspopup="listbox" role="button" class="secondary">Theme</summary>
+                <ul role="listbox">
+                    <li><a href="#" data-theme-switcher="auto">Auto</a></li>
+                    <li><a href="#" data-theme-switcher="light">Light</a></li>
+                    <li><a href="#" data-theme-switcher="dark">Dark</a></li>
+                </ul>
+            </details>
+            
+        {/if}
     </div>
     
 </article>
