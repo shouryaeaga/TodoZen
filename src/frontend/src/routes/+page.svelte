@@ -2,6 +2,7 @@
     import {onMount} from 'svelte'
     import {browser} from '$app/environment'
     import Todo from '$lib/Todo.svelte'
+    import Settings from $lib/Settings.svelte';
 
     import apiUrl from '$lib/appConfig'
     const api_url = apiUrl.apiUrl
@@ -17,6 +18,8 @@
     let todoDetail = ""
 
     let toggle_account_popup
+
+    let settings_modal
 
     let user = {};
     let username = ""
@@ -150,6 +153,11 @@
             clearInterval(refreshInterval)
         }
     })
+
+    function settings() {
+        account_popup.close()
+        settings_modal.showModal()
+    }
 </script>
 
 {#if loading}
@@ -196,10 +204,15 @@
             <p>Username: {user.username}</p>
             <p>Email: {user.email}</p>
             <footer>
+                <a href="#settings" on:click={settings} role="button" id="settings-button">Settings</a>
                 <a href="#logout" on:click={logout} role="button" id="logout-button">Logout</a>
             </footer>
             
         </article>
+    </dialog>
+
+    <dialog id="settings-modal" bind:this={settings_modal}>
+        <Settings />
     </dialog>
     {/if}
     
