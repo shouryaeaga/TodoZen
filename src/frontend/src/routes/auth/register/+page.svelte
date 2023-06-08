@@ -150,8 +150,8 @@
                 
                 <div class="container-fluid" id="password">
                     <div>
-                        <input type="password" style="margin-right: 2%; width: 80%;" name="password" id="passwordInput" on:change={passwordChange} placeholder="Password" bind:value={password} bind:this={password_box} required>
-                        <a role="button" href="#p" style="width: 15%;" on:click={toggleVisibility}><i class="fa-solid fa-eye"></i></a>
+                        <input type="password" style="margin-right: 2%; width: 75%;" name="password" id="passwordInput" on:change={passwordChange} placeholder="Password" bind:value={password} bind:this={password_box} required>
+                        <a role="button" href="#p" style="width: 20%;" on:click={toggleVisibility}><i class="fa-solid fa-eye"></i></a>
                         
                     </div>
                     
@@ -160,8 +160,8 @@
                 
                 <div class="container-fluid" id="password">
                     <div>
-                        <input type="password" style="margin-right: 2%; width: 80%;" name="password_confirm" id="passwordConfirmInput" on:change={passwordChange} placeholder="Confirmation" bind:value={password_confirmation} bind:this={password_confirmation_box} required>
-                        <a role="button" href="#p" style="width: 15%;" on:click={toggleVisibilityConfirm}><i class="fa-solid fa-eye"></i></a>
+                        <input type="password" style="margin-right: 2%; width: 75%;" name="password_confirm" id="passwordConfirmInput" on:change={passwordChange} placeholder="Confirmation" bind:value={password_confirmation} bind:this={password_confirmation_box} required>
+                        <a role="button" href="#p" style="width: 20%;" on:click={toggleVisibilityConfirm}><i class="fa-solid fa-eye"></i></a>
                     </div>
                 </div>
 
