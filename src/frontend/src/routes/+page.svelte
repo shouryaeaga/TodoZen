@@ -24,6 +24,8 @@
     let username = ""
     let page = "account"
 
+    let isLight = true
+
     function accountPage() {
         page = "account"
     }
@@ -157,8 +159,12 @@
     }
 
     onMount(async () => {
+        isLight = Boolean(localStorage.getItem("isLight"))
+        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark')
         await refresh(getTodos)
         const refreshInterval = setInterval(refresh, 870000)
+
+        
 
         return () => {
             clearInterval(refreshInterval)
@@ -168,6 +174,14 @@
     function settings() {
         account_popup.close()
         settings_modal.showModal()
+    }
+
+
+
+    function toggleTheme() {
+        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark')
+        isLight = isLight ? false : true
+        localStorage.setItem("isLight", String(isLight))
     }
 </script>
 
@@ -253,7 +267,7 @@
                     <hr>
                 {:else}
                     <h2>Select Theme</h2>
-                    <a class="contrast theme-switcher" role="button" href="#">Toggle theme</a>
+                    <a class="contrast theme-switcher" on:click={toggleTheme} role="button" href="#">Toggle theme</a>
                     
                 {/if}
             </div>
