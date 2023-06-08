@@ -23,6 +23,18 @@
 
     let user = {};
     let username = ""
+    let page = "account"
+
+    function accountPage() {
+        page = "account"
+    }
+
+    function themePage() {
+        page = "theme"
+    }
+
+
+
     function refresh(todoReq) {
         fetch(`${api_url}/auth/refresh`, {
             method: "POST",
