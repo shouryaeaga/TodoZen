@@ -29,7 +29,7 @@
         </nav>
     </aside>
     <div class="container">
-        {#if account}
+        {#if page === "account"}
             <h2>Change username</h2>
             WIP
             <hr>
