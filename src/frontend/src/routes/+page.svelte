@@ -182,7 +182,7 @@
     function toggleTheme() {
         document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light')
         isLight = isLight ? false : true
-        localStorage.setItem("isLight", String(isLight))
+        localStorage.setItem("isLight", String(!isLight))
     }
 </script>
 
