@@ -2,6 +2,7 @@
     import {onMount} from 'svelte'
 
     onMount(() => {
+        isLight = (localStorage.getItem("isLight") === "true")
         if (isLight === true) {
             document.documentElement.setAttribute('data-theme', 'light')
         } else if (isLight === false) {
