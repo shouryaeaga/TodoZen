@@ -160,9 +160,9 @@
 
     onMount(async () => {
         isLight = Boolean(localStorage.getItem("isLight"))
-        if (isLight) {
+        if (isLight === true) {
             document.documentElement.setAttribute('data-theme', 'light')
-        } else {
+        } else if (isLight === false) {
             document.documentElement.setAttribute('data-theme', 'dark')
         }
         await refresh(getTodos)
