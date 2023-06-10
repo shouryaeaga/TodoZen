@@ -160,8 +160,11 @@
 
     onMount(async () => {
         isLight = Boolean(localStorage.getItem("isLight"))
-        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark')
-        isLight = isLight
+        if (isLight) {
+            document.documentElement.setAttribute('data-theme', 'light')
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark')
+        }
         await refresh(getTodos)
         const refreshInterval = setInterval(refresh, 870000)
 
