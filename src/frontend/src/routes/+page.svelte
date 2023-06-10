@@ -162,9 +162,11 @@
         await refresh(getTodos)
         isLight = Boolean(localStorage.getItem("isLight"))
         if (isLight === true) {
-            document.documentElement.setAttribute('data-theme', 'light')
-        } else if (isLight === false) {
             document.documentElement.setAttribute('data-theme', 'dark')
+        } else if (isLight === false) {
+            document.documentElement.setAttribute('data-theme', 'light')
+        } else {
+            document.documentElement.setAttribute('data-theme', 'auto')
         }
         const refreshInterval = setInterval(refresh, 870000)
 
