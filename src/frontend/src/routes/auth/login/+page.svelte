@@ -16,6 +16,14 @@
     const api_url = apiUrl.apiUrl
 
     onMount(() => {
+        if (isLight === true) {
+            document.documentElement.setAttribute('data-theme', 'light')
+        } else if (isLight === false) {
+            document.documentElement.setAttribute('data-theme', 'dark')
+        } else {
+            document.documentElement.setAttribute('data-theme', 'auto')
+        }
+
         fetch(`${api_url}/auth/refresh`, {
             method: "POST",
             credentials: "include",
@@ -36,6 +44,8 @@
         .catch((err) => {
             console.log(err)
         })
+
+        
     })
 
     const submitHandler = (e) => {

@@ -2,6 +2,7 @@
     import {onMount} from 'svelte'
     import {browser} from '$app/environment'
     import Todo from '$lib/Todo.svelte'
+    import Settings from '$lib/Settings.svelte';
 
     import apiUrl from '$lib/appConfig'
     const api_url = apiUrl.apiUrl
@@ -22,17 +23,11 @@
 
     let user = {};
     let username = ""
-    let page = "account"
+
 
     let isLight
 
-    function accountPage() {
-        page = "account"
-    }
 
-    function themePage() {
-        page = "theme"
-    }
 
 
 
@@ -207,6 +202,7 @@
             <li>TodoZen</li>
         </ul>
         <ul>
+            <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
             <li><a role="button" href="#login" on:click={loginRedirect} id="loginButton">Login</a></li>
         </ul>
     </nav>
@@ -243,42 +239,7 @@
     </dialog>
 
     <dialog id="settings-modal" bind:this={settings_modal}>
-        <article>
-            <header>
-                <h2>Settings</h2>
-                {#if page === "account"}
-                <h4>Account</h4>
-                {:else}
-                <h4>Theme</h4>
-                {/if}
-            </header>
-            <div class="container">
-                <aside>
-                    <nav>
-                        <ul>
-                            <li><a href="#account-settings" on:click={accountPage}>Account</a></li>
-                            <li><a href="#theme" on:click={themePage}>Theme</a></li>
-                        </ul>
-                    </nav>
-                </aside>
-                {#if page === "account"}
-                    <h2>Change username</h2>
-                    WIP
-                    <hr>
-                    <h2>Change email</h2>
-                    WIP
-                    <hr>
-                    <h2>Reset password</h2>
-                    WIP
-                    <hr>
-                {:else}
-                    <h2>Select Theme</h2>
-                    <a class="contrast theme-switcher" on:click={toggleTheme} role="button" href="#">Toggle theme</a>
-                    
-                {/if}
-            </div>
-            
-        </article>
+        <Settings toggle_theme={toggleTheme} />
     </dialog>
     {/if}
     

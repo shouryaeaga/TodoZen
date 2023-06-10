@@ -1,4 +1,5 @@
 <script>
+    import {onMount} from 'svelte'
     import {page} from "$app/stores"
     import {browser} from "$app/environment"
     const token = $page.url.searchParams.get("token")
@@ -12,6 +13,16 @@
     import apiUrl from '$lib/appConfig'
 
     const api_url = apiUrl.apiUrl
+
+    onMount(() => {
+        if (isLight === true) {
+            document.documentElement.setAttribute('data-theme', 'light')
+        } else if (isLight === false) {
+            document.documentElement.setAttribute('data-theme', 'dark')
+        } else {
+            document.documentElement.setAttribute('data-theme', 'auto')
+        }
+    })
 
     function passwordReset() {
         if (password1!== password2) {
