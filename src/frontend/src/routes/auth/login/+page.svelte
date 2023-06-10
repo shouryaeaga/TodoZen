@@ -94,6 +94,13 @@
             password_box.type = "password"
         }
     }
+
+    function toggleTheme() {
+        document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light')
+        isLight = !isLight
+        localStorage.setItem("isLight", String(isLight))
+    }
+
 </script>
 
 <nav class="container-fluid">
@@ -101,9 +108,11 @@
         <li>TodoZen</li>
     </ul>
     <ul>
+        <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
         <li>
             <a href="/">Home</a>
         </li>
+        
     </ul>
 </nav>
 
