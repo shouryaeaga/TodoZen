@@ -160,7 +160,7 @@
 
     onMount(async () => {
         await refresh(getTodos)
-        isLight = Boolean(localStorage.getItem("isLight"))
+        isLight = (localStorage.getItem("isLight") === "true")
         if (isLight === true) {
             document.documentElement.setAttribute('data-theme', 'dark')
         } else if (isLight === false) {
@@ -186,7 +186,7 @@
 
     function toggleTheme() {
         document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light')
-        isLight = isLight ? false : true
+        isLight = !isLight
         localStorage.setItem("isLight", String(isLight))
     }
 </script>
