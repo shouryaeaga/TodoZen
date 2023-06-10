@@ -162,9 +162,9 @@
         await refresh(getTodos)
         isLight = (localStorage.getItem("isLight") === "true")
         if (isLight === true) {
-            document.documentElement.setAttribute('data-theme', 'dark')
-        } else if (isLight === false) {
             document.documentElement.setAttribute('data-theme', 'light')
+        } else if (isLight === false) {
+            document.documentElement.setAttribute('data-theme', 'dark')
         } else {
             document.documentElement.setAttribute('data-theme', 'auto')
         }
