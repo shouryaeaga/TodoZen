@@ -12,6 +12,8 @@
     let password_confirmation_box
     import apiUrl from '$lib/appConfig'
 
+    let isLight
+
     const api_url = apiUrl.apiUrl
 
     onMount(() => {

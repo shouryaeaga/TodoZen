@@ -12,6 +12,8 @@
     import apiUrl from '$lib/appConfig'
     let password_box
 
+    let isLight
+
     let loading = true
     const api_url = apiUrl.apiUrl
 

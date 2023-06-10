@@ -11,6 +11,8 @@
         }
     })
 
+    let isLight
+
     export let toggle_theme
     
     let page = "account"

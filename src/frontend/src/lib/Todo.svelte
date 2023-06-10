@@ -17,6 +17,8 @@
     let saveButtonDisabled = true
     let popup
 
+    let isLight
+
     function changeHandler(e) {
         if (anonymous) {
             let todos = JSON.parse(localStorage.getItem("todos"))

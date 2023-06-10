@@ -24,12 +24,7 @@
     let user = {};
     let username = ""
 
-
     let isLight
-
-
-
-
 
     function refresh(todoReq) {
         fetch(`${api_url}/auth/refresh`, {

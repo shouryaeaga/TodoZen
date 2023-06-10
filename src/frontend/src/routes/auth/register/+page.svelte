@@ -15,6 +15,8 @@
     let loading = true
     let error = false
 
+    let isLight
+
     onMount(() => {
         if (isLight === true) {
             document.documentElement.setAttribute('data-theme', 'light')
