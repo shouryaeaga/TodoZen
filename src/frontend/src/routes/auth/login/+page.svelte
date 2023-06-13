@@ -82,6 +82,11 @@
     }
 </script>
 
+<svelte:head>
+    <meta name="description" content="Sort out and declutter your schedule into peace with TodoZen">
+    <title>TodoZen - Login</title>
+</svelte:head>
+
 <nav class="container-fluid">
     <ul>
         <li>TodoZen</li>

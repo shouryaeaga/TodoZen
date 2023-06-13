@@ -153,6 +153,11 @@
 </script>
 
 {#if loading}
+<svelte:head>
+    <meta name="description" content="Sort out and declutter your schedule into peace with TodoZen">
+    <title>TodoZen - Loading...</title>
+</svelte:head>
+
 <main class="container">
     <div aria-busy="true">
 
@@ -161,6 +166,12 @@
     
     
 {:else}
+
+<svelte:head>
+    <title>TodoZen - Home</title>
+    <meta name="description" content="Sort out and declutter your schedule into peace with TodoZen">
+</svelte:head>
+
 
 {#if anonymous}
     <nav class="container-fluid">
