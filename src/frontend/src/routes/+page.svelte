@@ -152,11 +152,13 @@
     })
 </script>
 
-{#if loading}
 <svelte:head>
     <meta name="description" content="Sort out and declutter your schedule into peace with TodoZen">
     <title>TodoZen - Loading...</title>
 </svelte:head>
+
+{#if loading}
+
 
 <main class="container">
     <div aria-busy="true">
