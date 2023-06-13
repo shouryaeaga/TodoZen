@@ -154,7 +154,12 @@
 
 <svelte:head>
     <meta name="description" content="Sort out and declutter your schedule into peace with TodoZen">
+    
+    {#if loading}
     <title>TodoZen - Loading...</title>
+    {:else}
+    <meta name="description" content="Sort out and declutter your schedule into peace with TodoZen">
+    {/if}
 </svelte:head>
 
 {#if loading}
@@ -168,11 +173,6 @@
     
     
 {:else}
-
-<svelte:head>
-    <title>TodoZen - Home</title>
-    <meta name="description" content="Sort out and declutter your schedule into peace with TodoZen">
-</svelte:head>
 
 
 {#if anonymous}
