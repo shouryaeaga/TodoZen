@@ -158,7 +158,7 @@
     {#if loading}
     <title>TodoZen - Loading...</title>
     {:else}
-    <meta name="description" content="Sort out and declutter your schedule into peace with TodoZen">
+    <title>TodoZen - Home...</title>
     {/if}
 </svelte:head>
 
