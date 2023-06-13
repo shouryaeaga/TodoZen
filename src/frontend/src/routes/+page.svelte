@@ -158,7 +158,7 @@
     {#if loading}
     <title>TodoZen - Loading...</title>
     {:else}
-    <title>TodoZen - Home...</title>
+    <title>TodoZen - Home</title>
     {/if}
 </svelte:head>
 
