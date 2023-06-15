@@ -57,7 +57,7 @@
                 
             })
             .catch((err) => {
-                message = "An error occured"
+                message = "An error occured, please contact support@shouryaeaga.com"
                 console.log(err)
             })
         }
@@ -74,12 +74,11 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             message = data.msg
         })
         .catch(error => {
             console.log(error) 
-            message="An error occured"
+            message="An error occured, please contact support@shouryaeaga.com"
         })
     }
 

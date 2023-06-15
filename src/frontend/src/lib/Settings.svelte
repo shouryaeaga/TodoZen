@@ -60,9 +60,9 @@
     }
 
     function changePassword() {
-        if (password !== password2) {
+        if (passwordInput !== passwordInput2) {
             changePasswordMessage = "Passwords do not match"
-        } else if (password.length < 8 || password.length > 24 || /\d/.test(password) === false || /[a-zA-Z]/g.test(password) === false || /\s/g.test(password) === true){
+        } else if (passwordInput.length < 8 || passwordInput.length > 24 || /\d/.test(passwordInput) === false || /[a-zA-Z]/g.test(passwordInput) === false || /\s/g.test(passwordInput) === true){
             changePasswordMessage = "Password must contain letters, numbers and be longer than 8 characters and shorter than 24"
         } else {
             fetch(`${api_url}/auth/change-password`, {
