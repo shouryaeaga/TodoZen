@@ -27,7 +27,9 @@
         }
     })
 
-    function passwordReset() {
+    function passwordReset(e) {
+        e.preventDefault()
+
         if (password1!== password2) {
             message = "Passwords do not match"
         } else if (password.length < 8 || password.length > 24 || /\d/.test(password) === false || /[a-zA-Z]/g.test(password) === false || /\s/g.test(password) === true){
