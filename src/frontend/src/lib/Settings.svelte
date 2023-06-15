@@ -50,6 +50,7 @@
         })
         .then((res) => res.json)
         .then((data) => {
+            console.log(data)
             changeUsernameMessage = data.msg
         })
     }
@@ -70,6 +71,7 @@
             })
             .then((res) => res.json)
             .then((data) => {
+                console.log(data)
                 changeUsernameMessage = data.msg
             })
         }
@@ -86,6 +88,7 @@
         })
         .then((res) => res.json)
         .then((data) => {
+            console.log(data)
             changeEmailMessage = data.msg
         })
     }
