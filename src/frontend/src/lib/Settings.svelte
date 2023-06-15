@@ -3,6 +3,8 @@
     import apiUrl from "./appConfig"
     const api_url = apiUrl.apiUrl
 
+    import {browser} from '$app/environment'
+
     let usernameInput
     let changeUsernameMessage = ""
 
@@ -51,6 +53,9 @@
         .then((res) => res.json())
         .then((data) => {
             changeUsernameMessage = data.msg
+            if (browser) {
+                window.location.href = "/"
+            }
         })
     }
 
@@ -71,6 +76,9 @@
             .then((res) => res.json())
             .then((data) => {
                 changeUsernameMessage = data.msg
+                if (browser) {
+                    window.location.href = "/"
+                }
             })
         }
     }
@@ -87,6 +95,9 @@
         .then((res) => res.json())
         .then((data) => {
             changeEmailMessage = data.msg
+            if (browser) {
+                window.location.href = "/"
+            }
         })
     }
 
