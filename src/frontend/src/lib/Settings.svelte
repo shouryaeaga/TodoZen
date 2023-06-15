@@ -48,9 +48,8 @@
             credentials: "include",
             body: JSON.stringify({username: usernameInput})
         })
-        .then((res) => res.json)
+        .then((res) => res.json())
         .then((data) => {
-            console.log(data)
             changeUsernameMessage = data.msg
         })
     }
@@ -69,9 +68,8 @@
                 credentials: "include",
                 body: JSON.stringify({old_password: oldPassword, new_password: passwordInput})
             })
-            .then((res) => res.json)
+            .then((res) => res.json())
             .then((data) => {
-                console.log(data)
                 changeUsernameMessage = data.msg
             })
         }
@@ -86,9 +84,8 @@
             credentials: "include",
             body: JSON.stringify({email: emailInput})
         })
-        .then((res) => res.json)
+        .then((res) => res.json())
         .then((data) => {
-            console.log(data)
             changeEmailMessage = data.msg
         })
     }
