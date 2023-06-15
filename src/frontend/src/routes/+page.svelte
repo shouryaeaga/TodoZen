@@ -181,7 +181,16 @@
     }
 </script>
 
+<svelte:head>
+    <meta name="description" content="Sort out and declutter your schedule into peace with TodoZen">
+    
+    <title>TodoZen - Home</title>
+
+</svelte:head>
+
 {#if loading}
+
+
 <main class="container">
     <div aria-busy="true">
 
@@ -190,6 +199,7 @@
     
     
 {:else}
+
 
 {#if anonymous}
     <nav class="container-fluid">
