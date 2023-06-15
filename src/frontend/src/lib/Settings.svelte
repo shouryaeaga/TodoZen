@@ -4,14 +4,14 @@
     const api_url = apiUrl.apiUrl
 
     let usernameInput
-    let changeUsernameMessage
+    let changeUsernameMessage = ""
 
     let oldPassword
     let passwordInput
     let passwordInput2
-    let changePasswordMessage
+    let changePasswordMessage = ""
 
-    let changeEmailMessage
+    let changeEmailMessage = ""
     let emailInput
 
     onMount(() => {
