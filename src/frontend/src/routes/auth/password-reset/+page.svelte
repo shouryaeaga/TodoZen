@@ -30,8 +30,8 @@
     function passwordReset() {
         if (password1!== password2) {
             message = "Passwords do not match"
-        } else if (password.length < 8 || password.length > 24 || /\d/.test(password) === false || /[a-zA-Z]/g.test(password) === false){
-            message = "Password must contain letters, numbers and be longer than 8 characters and shorter than 24"
+        } else if (password.length < 8 || password.length > 24 || /\d/.test(password) === false || /[a-zA-Z]/g.test(password) === false || /\s/g.test(password) === true){
+            message = "Password must contain letters, numbers and be longer than 8 characters and shorter than 24. Password can't contain spaces"
         } else {
             fetch(`${api_url}/auth/forgot-password/${user_id}/${token}`, {
                 method: "POST",

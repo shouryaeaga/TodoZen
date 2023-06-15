@@ -59,7 +59,7 @@
             message = "Username should be between 3 and 20 characters"
         } else if (email.length > 255) {
             message = "Email cannot be over 255 characters"
-        } else if (password.length < 8 || password.length > 24 || /\d/.test(password) === false || /[a-zA-Z]/g.test(password) === false){
+        } else if (password.length < 8 || password.length > 24 || /\d/.test(password) === false || /[a-zA-Z]/g.test(password) === false || /\s/g.test(password) === true){
             message = "Password must contain letters, numbers and be longer than 8 characters and shorter than 24"
         } else {
             fetch(`${api_url}/auth/signup`, {

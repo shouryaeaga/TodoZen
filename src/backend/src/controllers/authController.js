@@ -213,4 +213,76 @@ const resetPassword = async (req, res) => {
     }
 }
 
-module.exports = {signUp, login, refreshToken, logout, forgotPassword, resetPassword}
+const change_username = () => {
+    const new_username = req.body.username
+    if (!new_username) {
+        return res.status(400).json({msg: "Must send new username"})
+    }
+
+    const user_id = req.user.id
+
+    const query = "UPDATE users SET username=$1 WHERE id=$2"
+    db.query(query, [new_username, user_id], (error, results) => {
+        if (error) {
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+        return res.status(200).json({msg: "Username successfully changed."})
+    })
+}
+
+const change_password = () => {
+    const old_password = req.body.old_password
+    const new_password = req.body.new_password
+
+    if (!old_password || !new_password) {
+        return res.status(400).json({msg: "Must send old and new password"})
+    }
+
+    // Check if old password matches
+    const user_id = req.user.id
+    db.query("SELECT * FROM users WHERE id=$1", [user_id], async (err, results) => {
+        if (error) {
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+        const password = results.rows[0].password
+        try {
+            const passwordMatch = await argon2.verify(user.rows[0].password, password)
+            if (passwordMatch) {
+                const hashed_password = await argon2.hash(new_password)
+                db.query("UPDATE users SET password=$1 WHERE id=$2", [new_password, user_id], (err, results) => {
+                    if (err) {
+                        return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+                    }
+                    // Invalidate old refresh token
+                    db.query("UPDATE users SET refresh_token=NULL WHERE id=$1", [user_id], (err, results) => {
+                        if (error) {
+                            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+                        }
+                        return res.status(200).json({msg: "Changed password successfully"})
+                    })
+
+                    return res.status(200).json({msg: "Changed password successfully"})
+                })
+            } else {
+                return res.status(400).json({msg: "Invalid old password"})
+            }
+        } catch (err) {
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+    })
+}
+
+const change_email = () => {
+    const new_email = req.body.email
+    
+    user_id = req.user.id
+
+    db.query("UPDATE users SET email=$1 WHERE id=$2", [new_email, user_id], (err, results) => {
+        if (err) {
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+        return res.status(200).json({msg: "Changed email successfully"})
+    })
+}
+
+module.exports = {signUp, login, refreshToken, logout, forgotPassword, resetPassword, change_username, change_password, change_email}
