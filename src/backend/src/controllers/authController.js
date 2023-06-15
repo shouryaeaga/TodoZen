@@ -213,7 +213,7 @@ const resetPassword = async (req, res) => {
     }
 }
 
-const change_username = () => {
+const change_username = (req, res) => {
     const new_username = req.body.username
     if (!new_username) {
         return res.status(400).json({msg: "Must send new username"})
@@ -230,7 +230,7 @@ const change_username = () => {
     })
 }
 
-const change_password = () => {
+const change_password = (req, res) => {
     const old_password = req.body.old_password
     const new_password = req.body.new_password
 
@@ -272,7 +272,7 @@ const change_password = () => {
     })
 }
 
-const change_email = () => {
+const change_email = (req, res) => {
     const new_email = req.body.email
     
     user_id = req.user.id
