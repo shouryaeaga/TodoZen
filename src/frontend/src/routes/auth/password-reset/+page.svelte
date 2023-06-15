@@ -142,10 +142,10 @@
                 <h1>Enter your new password</h1>
             </hgroup>
             
-            <form on:submit={passwordReset}>
+            <form>
                 <input type="password" name="password1" id="password1" placeholder="Password" on:change={passwordChange()} bind:value={password1} bind:this={password_box}>
                 <input type="password" name="password2" id="password2" placeholder="Confirm password" on:change={passwordChange()} bind:value={password2} bind:this={password_confirmation_box}>
-                <input type="submit" value="Set password">
+                <input type="submit" value="Set password" on:click={passwordReset}>
                 <p id="message">{message}</p>
             </form>
             {/if}
