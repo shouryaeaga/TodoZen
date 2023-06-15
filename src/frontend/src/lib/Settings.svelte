@@ -55,7 +55,7 @@
     }
 
     function changePassword() {
-        if (password1!== password2) {
+        if (password !== password2) {
             changePasswordMessage = "Passwords do not match"
         } else if (password.length < 8 || password.length > 24 || /\d/.test(password) === false || /[a-zA-Z]/g.test(password) === false || /\s/g.test(password) === true){
             changePasswordMessage = "Password must contain letters, numbers and be longer than 8 characters and shorter than 24"
