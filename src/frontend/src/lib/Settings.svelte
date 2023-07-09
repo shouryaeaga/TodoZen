@@ -1,7 +1,7 @@
 <script>
     import {onMount} from 'svelte'
-    import apiUrl from "./appConfig"
-    const api_url = apiUrl.apiUrl
+    import config from "./appConfig"
+    const api_url = config.apiUrl
 
     import {browser} from '$app/environment'
 
@@ -53,9 +53,7 @@
         .then((res) => res.json())
         .then((data) => {
             changeUsernameMessage = data.msg
-            if (browser) {
-                window.location.href = "/"
-            }
+            
         })
     }
 
@@ -92,9 +90,6 @@
         .then((res) => res.json())
         .then((data) => {
             changeEmailMessage = data.msg
-            if (browser) {
-                window.location.href = "/"
-            }
         })
     }
 

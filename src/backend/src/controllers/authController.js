@@ -64,8 +64,8 @@ const login = async (req, res) => {
     try {
         const user = await db.query("SELECT * FROM users WHERE username = $1", [username])
 
-
         if (user.rowCount == 0) {
+            console.log('here: line 69')
             return res.status(401).json({msg:"Invalid username or password"})
         }
         
@@ -91,10 +91,12 @@ const login = async (req, res) => {
                 })
             } else {
                 // Check if password is wrong
+                console.log('here: line 95')
                 return res.status(401).json({msg:"Invalid username or password"})
             }
         } else {
             // User does not exist
+            console.log('here: line 100')
             return res.status(401).json({msg:"Invalid username or password"})
         }
     } catch (err) {
@@ -223,11 +225,21 @@ const change_username = (req, res) => {
     const user_id = req.user.id
 
     const query = "UPDATE users SET username=$1 WHERE id=$2"
-    db.query(query, [new_username, user_id], (error, results) => {
+    db.query(query, [new_username.toLowerCase(), user_id], (error, results) => {
         if (error) {
             return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
         }
-        return res.status(200).json({msg: "Username successfully changed."})
+        const newAccessToken = jwt.sign({username: new_username, type: "access"}, process.env.JWT_SECRET, {expiresIn: "15m"})
+        const newRefreshToken = jwt.sign({username: new_username, type: "refresh"}, process.env.JWT_SECRET, {expiresIn: "7d"})
+        db.query("UPDATE users SET refresh_token=$1 WHERE id=$2", [newRefreshToken, user_id], (error, results) => {
+            if (error) {
+                return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
+            }
+            res.cookie("access_token", newAccessToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 15})
+            res.cookie('refresh_token', newRefreshToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
+            return res.status(200).json({msg:"Success"})
+        })
+        
     })
 }
 
@@ -248,24 +260,29 @@ const change_password = (req, res) => {
         }
         const password = results.rows[0].password
         try {
-            const passwordMatch = await argon2.verify(results.rows[0].password, password)
+            const passwordMatch = await argon2.verify(password, old_password)
             if (passwordMatch) {
                 const hashed_password = await argon2.hash(new_password)
-                db.query("UPDATE users SET password=$1 WHERE id=$2", [new_password, user_id], (err, results) => {
+                db.query("UPDATE users SET password=$1 WHERE id=$2", [hashed_password, user_id], (err, results) => {
                     if (err) {
                         console.log(err)
                         return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
                     }
+                    const newAccessToken = jwt.sign({username: req.user.username, type: "access"}, process.env.JWT_SECRET, {expiresIn: "15m"})
+                    const newRefreshToken = jwt.sign({username: req.user.username, type: "refresh"}, process.env.JWT_SECRET, {expiresIn: "7d"})
                     // Invalidate old refresh token
-                    db.query("UPDATE users SET refresh_token=NULL WHERE id=$1", [user_id], (err, results) => {
+                    db.query("UPDATE users SET refresh_token=$1 WHERE id=$2", [newRefreshToken,user_id], (error, results) => {
                         if (error) {
                             console.log(err)
                             return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
                         }
+                        
+                        res.cookie("access_token", newAccessToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 15})
+                        res.cookie('refresh_token', newRefreshToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
                         return res.status(200).json({msg: "Changed password successfully"})
                     })
 
-                    return res.status(200).json({msg: "Changed password successfully"})
+                    
                 })
             } else {
                 return res.status(400).json({msg: "Invalid old password"})
@@ -286,7 +303,17 @@ const change_email = (req, res) => {
         if (err) {
             return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
         }
-        return res.status(200).json({msg: "Changed email successfully"})
+        const newAccessToken = jwt.sign({username: req.user.username, type: "access"}, process.env.JWT_SECRET, {expiresIn: "15m"})
+        const newRefreshToken = jwt.sign({username: req.user.username, type: "refresh"}, process.env.JWT_SECRET, {expiresIn: "7d"})
+        res.cookie("access_token", newAccessToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 15})
+        res.cookie('refresh_token', newRefreshToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
+        db.query("UPDATE users SET refresh_token=$1 WHERE username=$2", [newRefreshToken, req.user.username], (error, results) => {
+            if (error) {
+                return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+            }
+            return res.status(200).json({msg: "Changed email successfully"})
+        })
+        
     })
 }
 
