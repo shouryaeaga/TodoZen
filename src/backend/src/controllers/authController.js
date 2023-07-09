@@ -180,7 +180,7 @@ const forgotPassword = async (req, res) => {
         const insertQuery = "UPDATE users SET password_token = $1 WHERE email = $2"
         const insertResults = await db.query(insertQuery, [password_token, email])
         sendEmail(process.env.EMAIL_FROM, email, "Password Reset", `Password reset link: http://${process.env.FRONTEND_URL}/auth/password-reset?user_id=${results.rows[0].id}&token=${password_token}`)
-        return res.status(200).json({msg:"Password reset link sent"})
+        return res.status(200).json({msg:"Password reset link sent if email exists"})
     } catch (err) {
         console.log(err)
         return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
@@ -199,8 +199,9 @@ const resetPassword = async (req, res) => {
         const token = req.params.token
         const user_id = req.params.user_id
         const user = await db.query("SELECT * FROM users WHERE password_token = $1", [token])
-        if (user.rows[0].id !== user_id) {
-            return res.status(400).json({msg:"User not found"})
+        console.log(user)
+        if (user.rows.length === 0 || user.rows[0].id !== user_id) {
+            return res.status(400).json({msg:"User or token not found"})
         }
 
         const hashed_password = await argon2.hash(password)
@@ -241,21 +242,24 @@ const change_password = (req, res) => {
     // Check if old password matches
     const user_id = req.user.id
     db.query("SELECT * FROM users WHERE id=$1", [user_id], async (err, results) => {
-        if (error) {
+        if (err) {
+            console.log(err)
             return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
         }
         const password = results.rows[0].password
         try {
-            const passwordMatch = await argon2.verify(user.rows[0].password, password)
+            const passwordMatch = await argon2.verify(results.rows[0].password, password)
             if (passwordMatch) {
                 const hashed_password = await argon2.hash(new_password)
                 db.query("UPDATE users SET password=$1 WHERE id=$2", [new_password, user_id], (err, results) => {
                     if (err) {
+                        console.log(err)
                         return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
                     }
                     // Invalidate old refresh token
                     db.query("UPDATE users SET refresh_token=NULL WHERE id=$1", [user_id], (err, results) => {
                         if (error) {
+                            console.log(err)
                             return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
                         }
                         return res.status(200).json({msg: "Changed password successfully"})
@@ -267,6 +271,7 @@ const change_password = (req, res) => {
                 return res.status(400).json({msg: "Invalid old password"})
             }
         } catch (err) {
+            console.log(err)
             return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
         }
     })

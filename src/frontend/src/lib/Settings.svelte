@@ -75,10 +75,7 @@
             })
             .then((res) => res.json())
             .then((data) => {
-                changeUsernameMessage = data.msg
-                if (browser) {
-                    window.location.href = "/"
-                }
+                changePasswordMessage = data.msg
             })
         }
     }

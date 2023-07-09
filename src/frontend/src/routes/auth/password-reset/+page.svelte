@@ -27,12 +27,14 @@
         }
     })
 
-    function passwordReset(e) {
-        e.preventDefault()
-
-        if (password1!== password2) {
+    function passwordReset() {
+        console.log("HELLO")
+        if (password1 !== password2) {
+            password_box.setAttribute('aria-invalid', 'true')
+            password_confirmation_box.setAttribute('aria-invalid', 'true')
             message = "Passwords do not match"
-        } else if (password.length < 8 || password.length > 24 || /\d/.test(password) === false || /[a-zA-Z]/g.test(password) === false || /\s/g.test(password) === true){
+        } else if (password1.length < 8 || password1.length > 24 || /\d/.test(password1) === false || /[a-zA-Z]/g.test(password1) === false || /\s/g.test(password1) === true){
+            password_box.setAttribute('aria-invalid', 'true')
             message = "Password must contain letters, numbers and be longer than 8 characters and shorter than 24. Password can't contain spaces"
         } else {
             fetch(`${api_url}/auth/forgot-password/${user_id}/${token}`, {
@@ -46,9 +48,9 @@
             })
             .then((res) => {
                 if (res.status === 200) {
-                    if (browser) {
-                        window.location.href = "/auth/login?context=password-reset"
-                    }
+                    // if (browser) {
+                    //     window.location.href = "/auth/login?context=password-reset"
+                    // }
                 }
                 return res.json()
             })
@@ -80,18 +82,6 @@
             console.log(error) 
             message="An error occured, please contact support@shouryaeaga.com"
         })
-    }
-
-    function passwordChange() {
-        if (password1 !== password2) {
-            password_confirmation_box.setAttribute("aria-invalid", true)
-        } else if (password1.length < 8 || password1.length > 24 || /\d/.test(password1) === false || /[a-zA-Z]/g.test(password1) === false) {
-            password_box.setAttribute("aria-invalid", true)
-            password_confirmation_box.setAttribute("aria-invalid", true)
-        } else {
-            password_box.setAttribute("aria-invalid", false)
-            password_confirmation_box.setAttribute("aria-invalid", false)
-        }
     }
 
     function toggleTheme() {
@@ -129,7 +119,7 @@
                 <h1>Enter your email and we will send a link to reset it</h1>
             </hgroup>
             
-            <form on:submit={emailPasswordReset}>
+            <form on:submit={emailPasswordReset} target="frame" method="post">
                 <input type="email" bind:value={email} name="email" id="email" placeholder="Enter your email">
                 <input type="submit" value="Submit">
                 <p id="message">{message}</p>
@@ -141,10 +131,10 @@
                 <h1>Enter your new password</h1>
             </hgroup>
             
-            <form>
-                <input type="password" name="password1" id="password1" placeholder="Password" on:change={passwordChange()} bind:value={password1} bind:this={password_box}>
-                <input type="password" name="password2" id="password2" placeholder="Confirm password" on:change={passwordChange()} bind:value={password2} bind:this={password_confirmation_box}>
-                <input type="submit" value="Set password" on:click={passwordReset}>
+            <form target="frame" method="post" on:submit={passwordReset}>
+                <input type="password" name="password1" id="password1" placeholder="Password" bind:value={password1} bind:this={password_box}>
+                <input type="password" name="password2" id="password2" placeholder="Confirm password" bind:value={password2} bind:this={password_confirmation_box}>
+                <input type="submit" value="Reset Password">
                 <p id="message">{message}</p>
             </form>
             {/if}
@@ -152,3 +142,5 @@
         
     </article>
 </main>
+
+<iframe name="frame" style="display: none;"></iframe>

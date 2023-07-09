@@ -157,7 +157,7 @@
     {:else}
     <article class="grid">
         <div>
-            <form>
+            <form method="post">
                 <hgroup>
                     <h1>Sign Up</h1>
                 </hgroup>
