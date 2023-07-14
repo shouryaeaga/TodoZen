@@ -48,9 +48,9 @@
             })
             .then((res) => {
                 if (res.status === 200) {
-                    // if (browser) {
-                    //     window.location.href = "/auth/login?context=password-reset"
-                    // }
+                    if (browser) {
+                        window.location.href = "/auth/login?context=password-reset"
+                    }
                 }
                 return res.json()
             })

@@ -102,7 +102,7 @@
     
     <div class="container-fluid">
         <div>
-            <input style="width: 85%;" type="text" name="details" id="details" bind:this={detailsInput} bind:value={details} on:input={areTheyTheSame} readonly />
+            <input style="width: 85%; margin-right: 10px;" type="text" name="details" id="details" bind:this={detailsInput} bind:value={details} on:input={areTheyTheSame} readonly />
         
             <input type="checkbox" name="completed" id="completed" data-tooltip="Complete" bind:checked={completed} on:change={toggleHandler}> 
             

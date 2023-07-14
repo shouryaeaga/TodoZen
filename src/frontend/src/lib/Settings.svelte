@@ -16,6 +16,8 @@
     let changeEmailMessage = ""
     let emailInput
 
+    export let popup;
+
     onMount(() => {
         isLight = (localStorage.getItem("isLight") === "true")
         if (isLight === true) {
@@ -97,6 +99,7 @@
 
 <article>
     <header>
+        <a href="#close" aria-label="Close" class="close" on:click={popup.close()}></a>
         <h2>Settings</h2>
         {#if page === "account"}
         <h4>Account</h4>
@@ -107,14 +110,14 @@
     <div class="container">
         
         <h2>Change username</h2>
-        <form on:submit={changeUsername}>
+        <form target="frame" method="post" on:submit={changeUsername}>
             <input type="text" bind:value={usernameInput} name="Username" id="username" placeholder="Change Username">
             <input type="submit" value="Change">
         </form>
         <p>{changeUsernameMessage}</p>
         <hr>
         <h2>Change Password</h2>
-        <form on:submit={changePassword}>
+        <form target="frame" method="post" on:submit={changePassword}>
             <input type="password" bind:value={oldPassword} name="oldPassword" id="oldPassword" placeholder="Enter old password">
             <input type="password" bind:value={passwordInput} name="Password1" id="password1" placeholder="Enter password">
             <input type="password" bind:value={passwordInput2} name="Password2" id="password2" placeholder="Confirm password">
@@ -123,7 +126,7 @@
         <p>{changePasswordMessage}</p>
         <hr>
         <h2>Change email</h2>
-        <form on:submit={changeEmail}>
+        <form target="frame" method="post" on:submit={changeEmail}>
             <input type="email" bind:value={emailInput} name="Email" id="email" placeholder="Change Email">
             <input type="submit" value="Change">
         </form>
@@ -131,3 +134,5 @@
     </div>
     
 </article>
+
+<iframe name="frame" style="display: none;"></iframe>
