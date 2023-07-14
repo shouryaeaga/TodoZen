@@ -100,19 +100,17 @@
     }
 
     function logout() {
-        if (confirm("Are you sure you want to logout?")) {
-            fetch(`${api_url}/auth/logout`, {
-                method: "POST",
-                credentials: "include",
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                if (browser) {
-                    window.location.href = "/auth/login"
-                }
-            })
-            .catch((err) => console.log(err))
-        }
+        fetch(`${api_url}/auth/logout`, {
+            method: "POST",
+            credentials: "include",
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (browser) {
+                window.location.href = "/auth/login"
+            }
+        })
+        .catch((err) => console.log(err))
         
     }
 
@@ -245,16 +243,16 @@
     </dialog>
 
     <dialog id="settings-modal" bind:this={settings_modal}>
-        <Settings toggle_theme={toggleTheme} />
+        <Settings popup={settings_modal} toggle_theme={toggleTheme} />
     </dialog>
     {/if}
     
     <div id="createForm">
         
         <form on:submit={addTodo}>
-            <div class="grid">
-                <div><input type="text" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Make coffee" required></div>
-                <div><input type="submit" value="Add Task" id="formSubmit"></div>
+            <div class="container-fluid">
+                <input type="text" style="margin-right: 2%; width: 70%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Make coffee" required>
+                <input type="submit" style="width: 25%;" value="Add Task" id="formSubmit">
             </div>
         </form>
     </div>
