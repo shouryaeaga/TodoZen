@@ -12,10 +12,22 @@
     import apiUrl from '$lib/appConfig'
     let password_box
 
+    let isLight
+
     let loading = true
     const api_url = apiUrl.apiUrl
 
     onMount(() => {
+
+        isLight = (localStorage.getItem("isLight") === "true")
+        if (isLight === true) {
+            document.documentElement.setAttribute('data-theme', 'light')
+        } else if (isLight === false) {
+            document.documentElement.setAttribute('data-theme', 'dark')
+        } else {
+            document.documentElement.setAttribute('data-theme', 'auto')
+        }
+
         fetch(`${api_url}/auth/refresh`, {
             method: "POST",
             credentials: "include",
@@ -36,6 +48,8 @@
         .catch((err) => {
             console.log(err)
         })
+
+        
     })
 
     const submitHandler = (e) => {
@@ -80,6 +94,13 @@
             password_box.type = "password"
         }
     }
+
+    function toggleTheme() {
+        document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light')
+        isLight = !isLight
+        localStorage.setItem("isLight", String(isLight))
+    }
+
 </script>
 
 <svelte:head>
@@ -89,12 +110,14 @@
 
 <nav class="container-fluid">
     <ul>
-        <li>TodoZen</li>
+        <li><a style="color: white;" href="/">TodoZen</a></li>
     </ul>
     <ul>
+        <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
         <li>
             <a href="/">Home</a>
         </li>
+        
     </ul>
 </nav>
 

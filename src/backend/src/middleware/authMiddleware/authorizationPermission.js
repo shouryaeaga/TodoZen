@@ -11,7 +11,7 @@ const regularUserPermission = async (req, res, next) => {
         const {username, type} = jwt.verify(access_token, process.env.JWT_SECRET)
 
         // Check if the user is in database
-        const user = await db.query("SELECT * FROM users WHERE username = $1", [username])
+        const user = await db.query("SELECT * FROM users WHERE username = $1", [username.toLowerCase()])
         if (user.rowCount === 0) {
             return res.status(401).json({msg: "Unauthorized"})
         }

@@ -2,6 +2,7 @@
     import {onMount} from 'svelte'
     import {browser} from '$app/environment'
     import Todo from '$lib/Todo.svelte'
+    import Settings from '$lib/Settings.svelte';
 
     import apiUrl from '$lib/appConfig'
     const api_url = apiUrl.apiUrl
@@ -18,8 +19,13 @@
 
     let toggle_account_popup
 
+    let settings_modal
+
     let user = {};
     let username = ""
+
+    let isLight
+
     function refresh(todoReq) {
         fetch(`${api_url}/auth/refresh`, {
             method: "POST",
@@ -94,19 +100,17 @@
     }
 
     function logout() {
-        if (confirm("Are you sure you want to logout?")) {
-            fetch(`${api_url}/auth/logout`, {
-                method: "POST",
-                credentials: "include",
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                if (browser) {
-                    window.location.href = "/auth/login"
-                }
-            })
-            .catch((err) => console.log(err))
-        }
+        fetch(`${api_url}/auth/logout`, {
+            method: "POST",
+            credentials: "include",
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (browser) {
+                window.location.href = "/auth/login"
+            }
+        })
+        .catch((err) => console.log(err))
         
     }
 
@@ -144,12 +148,35 @@
 
     onMount(async () => {
         await refresh(getTodos)
+        isLight = (localStorage.getItem("isLight") === "true")
+        if (isLight === true) {
+            document.documentElement.setAttribute('data-theme', 'light')
+        } else if (isLight === false) {
+            document.documentElement.setAttribute('data-theme', 'dark')
+        } else {
+            document.documentElement.setAttribute('data-theme', 'auto')
+        }
         const refreshInterval = setInterval(refresh, 870000)
+
+        
 
         return () => {
             clearInterval(refreshInterval)
         }
     })
+
+    function settings() {
+        account_popup.close()
+        settings_modal.showModal()
+    }
+
+
+
+    function toggleTheme() {
+        document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light')
+        isLight = !isLight
+        localStorage.setItem("isLight", String(isLight))
+    }
 </script>
 
 <svelte:head>
@@ -175,18 +202,20 @@
 {#if anonymous}
     <nav class="container-fluid">
         <ul>
-            <li>TodoZen</li>
+            <li><a style="color: white;" href="/">TodoZen</a></li>
         </ul>
         <ul>
+            <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
             <li><a role="button" href="#login" on:click={loginRedirect} id="loginButton">Login</a></li>
         </ul>
     </nav>
 {:else}
     <nav class="container-fluid">
         <ul>
-            <li>TodoZen</li>
+            <li><a style="color: white;" href="/">TodoZen</a></li>
         </ul>
         <ul>
+            <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
             <li>
                 <a role="button" href="#account" on:click={toggleAccountPopup} bind:this={toggle_account_popup} id="togglePopupButton">{username}</a>
             </li>
@@ -206,19 +235,24 @@
             <p>Username: {user.username}</p>
             <p>Email: {user.email}</p>
             <footer>
+                <a href="#settings" on:click={settings} role="button" id="settings-button">Settings</a>
                 <a href="#logout" on:click={logout} role="button" id="logout-button">Logout</a>
             </footer>
             
         </article>
+    </dialog>
+
+    <dialog id="settings-modal" bind:this={settings_modal}>
+        <Settings popup={settings_modal} toggle_theme={toggleTheme} />
     </dialog>
     {/if}
     
     <div id="createForm">
         
         <form on:submit={addTodo}>
-            <div class="grid">
-                <div><input type="text" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Make coffee" required></div>
-                <div><input type="submit" value="Add Task" id="formSubmit"></div>
+            <div class="container-fluid">
+                <input type="text" style="margin-right: 2%; width: 70%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Make coffee" required>
+                <input type="submit" style="width: 25%;" value="Add Task" id="formSubmit">
             </div>
         </form>
     </div>

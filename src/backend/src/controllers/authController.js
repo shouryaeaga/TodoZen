@@ -64,8 +64,8 @@ const login = async (req, res) => {
     try {
         const user = await db.query("SELECT * FROM users WHERE username = $1", [username])
 
-
         if (user.rowCount == 0) {
+            console.log('here: line 69')
             return res.status(401).json({msg:"Invalid username or password"})
         }
         
@@ -91,10 +91,12 @@ const login = async (req, res) => {
                 })
             } else {
                 // Check if password is wrong
+                console.log('here: line 95')
                 return res.status(401).json({msg:"Invalid username or password"})
             }
         } else {
             // User does not exist
+            console.log('here: line 100')
             return res.status(401).json({msg:"Invalid username or password"})
         }
     } catch (err) {
@@ -180,7 +182,7 @@ const forgotPassword = async (req, res) => {
         const insertQuery = "UPDATE users SET password_token = $1 WHERE email = $2"
         const insertResults = await db.query(insertQuery, [password_token, email])
         sendEmail(process.env.EMAIL_FROM, email, "Password Reset", `Password reset link: http://${process.env.FRONTEND_URL}/auth/password-reset?user_id=${results.rows[0].id}&token=${password_token}`)
-        return res.status(200).json({msg:"Password reset link sent"})
+        return res.status(200).json({msg:"Password reset link sent if email exists"})
     } catch (err) {
         console.log(err)
         return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
@@ -199,8 +201,9 @@ const resetPassword = async (req, res) => {
         const token = req.params.token
         const user_id = req.params.user_id
         const user = await db.query("SELECT * FROM users WHERE password_token = $1", [token])
-        if (user.rows[0].id !== user_id) {
-            return res.status(400).json({msg:"User not found"})
+        console.log(user)
+        if (user.rows.length === 0 || user.rows[0].id !== user_id) {
+            return res.status(400).json({msg:"User or token not found"})
         }
 
         const hashed_password = await argon2.hash(password)
@@ -213,4 +216,105 @@ const resetPassword = async (req, res) => {
     }
 }
 
-module.exports = {signUp, login, refreshToken, logout, forgotPassword, resetPassword}
+const change_username = (req, res) => {
+    const new_username = req.body.username
+    if (!new_username) {
+        return res.status(400).json({msg: "Must send new username"})
+    }
+
+    const user_id = req.user.id
+
+    const query = "UPDATE users SET username=$1 WHERE id=$2"
+    db.query(query, [new_username.toLowerCase(), user_id], (error, results) => {
+        if (error) {
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+        const newAccessToken = jwt.sign({username: new_username, type: "access"}, process.env.JWT_SECRET, {expiresIn: "15m"})
+        const newRefreshToken = jwt.sign({username: new_username, type: "refresh"}, process.env.JWT_SECRET, {expiresIn: "7d"})
+        db.query("UPDATE users SET refresh_token=$1 WHERE id=$2", [newRefreshToken, user_id], (error, results) => {
+            if (error) {
+                return res.status(500).json({msg:"There was an error, please contact support@shouryaeaga.com"})
+            }
+            res.cookie("access_token", newAccessToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 15})
+            res.cookie('refresh_token', newRefreshToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
+            return res.status(200).json({msg:"Success"})
+        })
+        
+    })
+}
+
+const change_password = (req, res) => {
+    const old_password = req.body.old_password
+    const new_password = req.body.new_password
+
+    if (!old_password || !new_password) {
+        return res.status(400).json({msg: "Must send old and new password"})
+    }
+
+    // Check if old password matches
+    const user_id = req.user.id
+    db.query("SELECT * FROM users WHERE id=$1", [user_id], async (err, results) => {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+        const password = results.rows[0].password
+        try {
+            const passwordMatch = await argon2.verify(password, old_password)
+            if (passwordMatch) {
+                const hashed_password = await argon2.hash(new_password)
+                db.query("UPDATE users SET password=$1 WHERE id=$2", [hashed_password, user_id], (err, results) => {
+                    if (err) {
+                        console.log(err)
+                        return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+                    }
+                    const newAccessToken = jwt.sign({username: req.user.username, type: "access"}, process.env.JWT_SECRET, {expiresIn: "15m"})
+                    const newRefreshToken = jwt.sign({username: req.user.username, type: "refresh"}, process.env.JWT_SECRET, {expiresIn: "7d"})
+                    // Invalidate old refresh token
+                    db.query("UPDATE users SET refresh_token=$1 WHERE id=$2", [newRefreshToken,user_id], (error, results) => {
+                        if (error) {
+                            console.log(err)
+                            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+                        }
+                        
+                        res.cookie("access_token", newAccessToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 15})
+                        res.cookie('refresh_token', newRefreshToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
+                        return res.status(200).json({msg: "Changed password successfully"})
+                    })
+
+                    
+                })
+            } else {
+                return res.status(400).json({msg: "Invalid old password"})
+            }
+        } catch (err) {
+            console.log(err)
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+    })
+}
+
+const change_email = (req, res) => {
+    const new_email = req.body.email
+    
+    user_id = req.user.id
+
+    db.query("UPDATE users SET email=$1 WHERE id=$2", [new_email, user_id], (err, results) => {
+        if (err) {
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+        const newAccessToken = jwt.sign({username: req.user.username, type: "access"}, process.env.JWT_SECRET, {expiresIn: "15m"})
+        const newRefreshToken = jwt.sign({username: req.user.username, type: "refresh"}, process.env.JWT_SECRET, {expiresIn: "7d"})
+        res.cookie("access_token", newAccessToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 15})
+        res.cookie('refresh_token', newRefreshToken, {sameSite: "lax", httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7})
+        db.query("UPDATE users SET refresh_token=$1 WHERE username=$2", [newRefreshToken, req.user.username], (error, results) => {
+            if (error) {
+                return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+            }
+            return res.status(200).json({msg: "Changed email successfully"})
+        })
+        
+    })
+}
+
+module.exports = {signUp, login, refreshToken, logout, forgotPassword, resetPassword, change_username, change_password, change_email}
