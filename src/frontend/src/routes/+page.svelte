@@ -251,7 +251,7 @@
         
         <form on:submit={addTodo}>
             <div class="container-fluid">
-                <input type="text" style="margin-right: 2%; width: 70%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Make coffee" required>
+                <input type="text" style="margin-right: 2%; width: 70%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Add task" required>
                 <input type="submit" style="width: 25%;" value="Add Task" id="formSubmit">
             </div>
         </form>
