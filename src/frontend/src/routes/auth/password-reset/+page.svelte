@@ -56,7 +56,6 @@
             })
             .then((data) => {
                 message = data.msg
-                
             })
             .catch((err) => {
                 message = "An error occured, please contact support@shouryaeaga.com"
@@ -88,6 +87,22 @@
         document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light')
         isLight = !isLight
         localStorage.setItem("isLight", String(isLight))
+    }
+
+    function toggleVisibility() {
+        if (password_box.type === "password") {
+            password_box.type = "text"
+        } else {
+            password_box.type = "password"
+        }
+    }
+
+    function toggleVisibilityConfirm() {
+        if (password_confirmation_box.type === "password") {
+            password_confirmation_box.type = "text"
+        } else {
+            password_confirmation_box.type = "password"
+        }
     }
 
 </script>
@@ -132,8 +147,21 @@
             </hgroup>
             
             <form target="frame" method="post" on:submit={passwordReset}>
-                <input type="password" name="password1" id="password1" placeholder="Password" bind:value={password1} bind:this={password_box}>
-                <input type="password" name="password2" id="password2" placeholder="Confirm password" bind:value={password2} bind:this={password_confirmation_box}>
+                <div class="container-fluid">
+                    <div>
+                        <input type="password" style="margin-right: 2%; width: 75%;" name="password1" id="password1" placeholder="Password" bind:value={password1} bind:this={password_box}>
+                        <a role="button" href="#p" style="width: 20%;" on:click={toggleVisibility}><i class="fa-solid fa-eye"></i></a>
+                    </div>
+                </div>
+                
+                <div class="container-fluid">
+                    <div>
+                        <input type="password" style="margin-right: 2%; width: 75%;" name="password2" id="password2" placeholder="Confirm password" bind:value={password2} bind:this={password_confirmation_box}>
+                        <a role="button" href="#p" style="width: 20%;" on:click={toggleVisibilityConfirm}><i class="fa-solid fa-eye"></i></a>
+                    </div>
+                </div>
+                
+                
                 <input type="submit" value="Reset Password">
                 <p id="message">{message}</p>
             </form>
