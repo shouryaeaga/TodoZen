@@ -202,7 +202,7 @@
 {#if anonymous}
     <nav class="container-fluid">
         <ul>
-            <li><a aria-label="Back home" class="contrast" href="/">TodoZen</a></li>
+            <li><a data-placement="bottom" data-tooltip="Back home" aria-label="Back home" class="contrast" href="/">TodoZen</a></li>
         </ul>
         <ul>
             <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
@@ -212,7 +212,7 @@
 {:else}
     <nav class="container-fluid">
         <ul>
-            <li><a aria-label="Back home" class="contrast" href="/">TodoZen</a></li>
+            <li><a data-placement="bottom" data-tooltip="Back home" aria-label="Back home" class="contrast" href="/">TodoZen</a></li>
         </ul>
         <ul>
             <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
@@ -251,7 +251,7 @@
         
         <form on:submit={addTodo}>
             <div class="container-fluid">
-                <input type="text" style="margin-right: 2%; width: 70%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Make coffee" required>
+                <input type="text" style="margin-right: 2%; width: 70%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Add task" required>
                 <input type="submit" style="width: 25%;" value="Add Task" id="formSubmit">
             </div>
         </form>
