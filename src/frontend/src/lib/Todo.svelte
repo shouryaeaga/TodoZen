@@ -108,7 +108,7 @@
             
             <div class="container-fluid">
                 <div>
-                    <a style="width: 47%; margin-right: 5px;" href="#delete" role="button" on:click={deleteHandler}><i class="fa-solid fa-trash"></i></a>
+                    <a style="width: 47%; margin-right: 5px;" href="#delete" role="button" data-tooltip="Delete" on:click={deleteHandler}><i class="fa-solid fa-trash"></i></a>
                     <a style="width: 47%;" href="#edit" role="button" data-tooltip="Edit" on:click={editHandler}><i class="fa-solid fa-pen-to-square"></i></a>
                 </div>
                 

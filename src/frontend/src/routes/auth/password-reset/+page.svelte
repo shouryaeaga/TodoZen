@@ -114,7 +114,7 @@
 
 <nav class="container-fluid">
     <ul>
-        <li><a aria-label="Back home" class="contrast" href="/">TodoZen</a></li>
+        <li><a data-placement="bottom" data-tooltip="Back home" aria-label="Back home" class="contrast" href="/">TodoZen</a></li>
     </ul>
     <ul>
         <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
