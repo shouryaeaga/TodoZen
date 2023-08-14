@@ -110,14 +110,11 @@
 
 <nav class="container-fluid">
     <ul>
-        <li><a style="color: white;" href="/">TodoZen</a></li>
+        <li><a aria-label="Back home" class="contrast" href="/">TodoZen</a></li>
     </ul>
     <ul>
         <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
-        <li>
-            <a href="/">Home</a>
-        </li>
-        
+      
     </ul>
 </nav>
 
