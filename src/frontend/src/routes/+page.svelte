@@ -31,6 +31,10 @@
 
     let form_has_due_date = false
 
+    let due_date_modal
+
+    let due_date
+
     function refresh(todoReq) {
         fetch(`${api_url}/auth/refresh`, {
             method: "POST",
@@ -195,6 +199,12 @@
             showDueDateCheckbox.style.display = "none"
         }
     }
+
+    function submitDueDate() {
+        due_date_modal.close()
+        console.log(due_date)
+    }
+
 </script>
 
 <svelte:head>
@@ -273,16 +283,46 @@
                 <input type="text" style="margin-right: 1%; width: 80%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Add task" required>
                 <input bind:checked={form_has_due_date} on:change={dueDateShow} type="checkbox" data-tooltip="Has a due date?" style="margin-right: 1%">
 
-                <a data-tooltip="Enter due date" bind:this={showDueDateCheckbox} href="#duedate" role="button" style="display: none; width: 20px">
+                <a data-tooltip="Enter due date" on:click={() => {due_date_modal.showModal()}} bind:this={showDueDateCheckbox} href="#duedate" role="button" style="display: none; width: 20px">
                     <i class="fa-regular fa-calendar"></i>
                 </a>
                 
+                <dialog bind:this={due_date_modal} id="modal-due-date-create">
+                    <article>
+                        <header>
+                            <a href="#close"
+                            aria-label="Close"
+                            class="close"
+                            data-target="modal-due-date-create"
+                            onClick="toggleModal(event)">
+                            </a>
+                            Add due date
+                        </header>
+                        <form>
+                            <input bind:value={due_date} type="date">
+                        </form>
+                        <footer>
+                            <a href="#cancel"
+                            role="button"
+                            class="secondary"
+                            data-target="modal-example"
+                            onClick="toggleModal(event)">
+                            Cancel
+                            </a>
+                            <a href="#confirm"
+                                role="button"
+                                data-target="modal-example"
+                                on:click={submitDueDate}>
+                                Confirm
+                            </a>
+                        </footer>
+                    </article>
+                </dialog>
+
                 <a on:click={addTodo} href="#addTodo" type="submit" role="button" id="formSubmit">
                     <i class="fa-solid fa-check"></i>
                 </a>
-                
-                
-                    
+
             </div>
         </form>
     </div>
