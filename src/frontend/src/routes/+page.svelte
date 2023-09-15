@@ -78,7 +78,10 @@
         if (todoDetail.length > 512) {
             alert("Todo cannot be longer than 512 characters")
             return
-        } 
+        } else if (todoDetail.length === 0){
+            alert("Todo must have detail")
+            return
+        }
         if (!anonymous) {
             fetch(`${api_url}/todo/me`, {
                 method: "POST",
@@ -187,7 +190,7 @@
         console.log(form_has_due_date)
         if (form_has_due_date) {
             
-            showDueDateCheckbox.style.display = "block"
+            showDueDateCheckbox.style.display = "inline"
         } else {
             showDueDateCheckbox.style.display = "none"
         }
@@ -267,21 +270,16 @@
         <form>
             <div class="container-fluid">
                 
-                <input type="text" style="margin-right: 1%; width: 35%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Add task" required>
-                <input bind:checked={form_has_due_date} on:change={dueDateShow} type="checkbox" data-tooltip="Has a due date?" style="width: 20px; margin-right: 1%;">
+                <input type="text" style="margin-right: 1%; width: 80%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Add task" required>
+                <input bind:checked={form_has_due_date} on:change={dueDateShow} type="checkbox" data-tooltip="Has a due date?" style="margin-right: 1%">
+
+                <a data-tooltip="Enter due date" bind:this={showDueDateCheckbox} href="#duedate" role="button" style="display: none; width: 20px">
+                    <i class="fa-regular fa-calendar"></i>
+                </a>
                 
-                <div class="container-fluid">
-                    <div>
-                        <a bind:this={showDueDateCheckbox} href="#duedate" role="button" style="display: none; width: 12%">
-                            <i class="fa-regular fa-calendar"></i>
-                        </a>
-                        
-                        <a on:click={addTodo} href="#addTodo" style="width: 12%;" role="button" id="formSubmit">
-                            <i class="fa-solid fa-check"></i>
-                        </a>
-                    </div>
-                    
-                </div>
+                <a on:click={addTodo} href="#addTodo" type="submit" role="button" id="formSubmit">
+                    <i class="fa-solid fa-check"></i>
+                </a>
                 
                 
                     
