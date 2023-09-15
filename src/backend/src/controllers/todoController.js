@@ -10,7 +10,7 @@ const getTodosForUser = async (req, res) => {
 }
 
 const createTodoForCurrentUser = async (req, res) => {
-    let {details, completed} = req.body
+    let {details, completed, due} = req.body
     if (!details) {
         return res.status(400).json({msg: "No detail provided"})
     }
@@ -22,8 +22,22 @@ const createTodoForCurrentUser = async (req, res) => {
     const user_id = req.user.id
 
     // Create the todo
-    const todo = await db.query("INSERT INTO todos (owner_id, details, completed) VALUES ($1, $2, $3) RETURNING *", [user_id, req.body.details, completed])
-    res.status(201).json(todo.rows[0])
+    if (due !== undefined) {
+        try {
+            const todo = await db.query("INSERT INTO todos (owner_id, details, completed, due_date) VALUES ($1, $2, $3) RETURNING *", [user_id, req.body.details, completed, due])
+            res.status(201).json(todo.rows[0])
+        } catch (err) {
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+        
+    } else {
+        try {
+            const todo = await db.query("INSERT INTO todos (owner_id, details, completed) VALUES ($1, $2, $3) RETURNING *", [user_id, req.body.details, completed])
+            res.status(201).json(todo.rows[0])
+        } catch (err) {
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+    }
 }
 
 const updateTodoForCurrentUser = async (req, res) => {
