@@ -22,9 +22,14 @@
     let settings_modal
 
     let user = {};
+
+    let showDueDateCheckbox
+
     let username = ""
 
     let isLight
+
+    let form_has_due_date = false
 
     function refresh(todoReq) {
         fetch(`${api_url}/auth/refresh`, {
@@ -177,6 +182,16 @@
         isLight = !isLight
         localStorage.setItem("isLight", String(isLight))
     }
+
+    function dueDateShow() {
+        console.log(form_has_due_date)
+        if (form_has_due_date) {
+            
+            showDueDateCheckbox.style.display = "block"
+        } else {
+            showDueDateCheckbox.style.display = "none"
+        }
+    }
 </script>
 
 <svelte:head>
@@ -249,10 +264,27 @@
     
     <div id="createForm">
         
-        <form on:submit={addTodo}>
+        <form>
             <div class="container-fluid">
-                <input type="text" style="margin-right: 2%; width: 70%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Add task" required>
-                <input type="submit" style="width: 25%;" value="Add Task" id="formSubmit">
+                
+                <input type="text" style="margin-right: 1%; width: 35%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Add task" required>
+                <input bind:checked={form_has_due_date} on:change={dueDateShow} type="checkbox" data-tooltip="Has a due date?" style="width: 20px; margin-right: 1%;">
+                
+                <div class="container-fluid">
+                    <div>
+                        <a bind:this={showDueDateCheckbox} href="#duedate" role="button" style="display: none; width: 12%">
+                            <i class="fa-regular fa-calendar"></i>
+                        </a>
+                        
+                        <a on:click={addTodo} href="#addTodo" style="width: 12%;" role="button" id="formSubmit">
+                            <i class="fa-solid fa-check"></i>
+                        </a>
+                    </div>
+                    
+                </div>
+                
+                
+                    
             </div>
         </form>
     </div>
