@@ -10,7 +10,7 @@ const getTodosForUser = async (req, res) => {
 }
 
 const createTodoForCurrentUser = async (req, res) => {
-    let {details, completed, due} = req.body
+    const {details, completed, due} = req.body
     if (!details) {
         return res.status(400).json({msg: "No detail provided"})
     }
@@ -41,7 +41,7 @@ const createTodoForCurrentUser = async (req, res) => {
 }
 
 const updateTodoForCurrentUser = async (req, res) => {
-    const {details, completed, id} = req.body
+    const {details, completed, id, due} = req.body
     if (!(typeof(details) === "string") || !(typeof(completed) === "boolean")) {
         return res.status(400).json({msg: "Details are strings and completed is boolean"})
     }
@@ -53,8 +53,22 @@ const updateTodoForCurrentUser = async (req, res) => {
     }
 
     // Update the todo
-    const updatedTodo = await db.query("UPDATE todos SET details = $1, completed = $2 WHERE id = $3 RETURNING *", [details, completed, id])
-    res.status(200).json(updatedTodo.rows[0])
+    if (due !== undefined) {
+        try {
+            const updatedTodo = await db.query("UPDATE todos SET details = $1, completed = $2, due_date = $3 WHERE id = $4 RETURNING *", [details, completed, due, id])
+            res.status(200).json(updatedTodo.rows[0])
+        } catch (error) {
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+    } else {
+        try {
+            const updatedTodo = await db.query("UPDATE todos SET details = $1, completed = $2 WHERE id = $3 RETURNING *", [details, completed, id])
+            res.status(200).json(updatedTodo.rows[0])
+        } catch (error) {
+            return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
+        }
+    }
+    
     
 }
 
