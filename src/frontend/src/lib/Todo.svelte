@@ -29,7 +29,11 @@
             oldDetails = details
             return
         } else {
-            if (oldDetails !== details) {
+            if (!new_due_date && show_date_entry_form) {
+                alert("Enter due date please")
+                return
+            }
+            if (oldDetails !== details || due_date !== new_due_date) {
                 fetch(`${api_url}/todo/me`, {
                     method: "PUT",
                     headers: {
