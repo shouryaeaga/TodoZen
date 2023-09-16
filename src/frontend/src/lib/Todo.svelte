@@ -36,6 +36,10 @@
 
     function changeHandler(e) {
         if (anonymous) {
+            if (!new_due_date && show_date_entry_form) {
+                alert("Enter due date please")
+                return
+            }
             let todos = JSON.parse(localStorage.getItem("todos"))
             const objIndex = todos.findIndex((todo => todo.id == id))
             todos[objIndex].details = details
