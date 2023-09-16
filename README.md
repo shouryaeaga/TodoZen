@@ -16,9 +16,9 @@ A working version of the master branch can be found on https://todo.shouryaeaga.
 - Frontend: Svelte and Picocss
 - Backend: Node.js, Express
 - Database: PostgreSQL
-- Authentication: JWT (JSON Web Tokens)
+- Authentication: JWT (JSON Web Tokens), fully secure with encryption using Argon2
 - Web Server: Nginx
 - Containerization: Docker
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the GPL License.
