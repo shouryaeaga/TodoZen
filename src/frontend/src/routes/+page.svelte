@@ -23,7 +23,7 @@
 
     let user = {};
 
-    let showDueDateCheckbox
+    let dueDateInput
 
     let username = ""
 
@@ -34,6 +34,8 @@
     let due_date_modal
 
     let due_date
+
+    let create_new_todo_modal
 
     function refresh(todoReq) {
         fetch(`${api_url}/auth/refresh`, {
@@ -85,7 +87,12 @@
         } else if (todoDetail.length === 0){
             alert("Todo must have detail")
             return
+        } else if (form_has_due_date && due_date == undefined) {
+            alert("Specify the due date please")
+            return
         }
+        create_new_todo_modal.close()
+        console.log(due_date)
         if (!anonymous) {
             fetch(`${api_url}/todo/me`, {
                 method: "POST",
@@ -95,6 +102,7 @@
                 },
                 body: JSON.stringify({
                     details: todoDetail,
+                    due_date: due_date
                 }),
             })
             .then((response) => response.json())
@@ -104,7 +112,7 @@
             })
             .catch((err) => console.log(err))
         } else {
-            const newTodo = {id: crypto.randomUUID(), anonymous: true, details: todoDetail, completed: false}
+            const newTodo = {id: crypto.randomUUID(), anonymous: true, details: todoDetail, completed: false, due_date: due_date}
             todos = [...todos, newTodo]
             localStorage.setItem("todos", JSON.stringify(todos))
         }
@@ -194,9 +202,9 @@
         console.log(form_has_due_date)
         if (form_has_due_date) {
             
-            showDueDateCheckbox.style.display = "inline"
+            dueDateInput.style.display = "inline"
         } else {
-            showDueDateCheckbox.style.display = "none"
+            dueDateInput.style.display = "none"
         }
     }
 
@@ -275,57 +283,39 @@
     </dialog>
     {/if}
     
-    <div id="createForm">
-        
-        <form>
-            <div class="container-fluid">
-                
-                <input type="text" style="margin-right: 1%; width: 80%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Add task" required>
-                <input bind:checked={form_has_due_date} on:change={dueDateShow} type="checkbox" data-tooltip="Has a due date?" style="margin-right: 1%">
+    <a href="#create" on:click={create_new_todo_modal.showModal()}>
+        <strong>+</strong> Create new todo
+    </a>
 
-                <a data-tooltip="Enter due date" on:click={() => {due_date_modal.showModal()}} bind:this={showDueDateCheckbox} href="#duedate" role="button" style="display: none; width: 20px">
-                    <i class="fa-regular fa-calendar"></i>
+    <dialog bind:this={create_new_todo_modal} id="create-new-todo-modal">
+        <article>
+            <header>
+                <a href="#close" class="close" on:click={create_new_todo_modal.close()}>
                 </a>
-                
-                <dialog bind:this={due_date_modal} id="modal-due-date-create">
-                    <article>
-                        <header>
-                            <a href="#close"
-                            aria-label="Close"
-                            class="close"
-                            data-target="modal-due-date-create"
-                            onClick="toggleModal(event)">
-                            </a>
-                            Add due date
-                        </header>
-                        <form>
-                            <input bind:value={due_date} type="date">
-                        </form>
-                        <footer>
-                            <a href="#cancel"
-                            role="button"
-                            class="secondary"
-                            data-target="modal-example"
-                            onClick="toggleModal(event)">
-                            Cancel
-                            </a>
-                            <a href="#confirm"
-                                role="button"
-                                data-target="modal-example"
-                                on:click={submitDueDate}>
-                                Confirm
-                            </a>
-                        </footer>
-                    </article>
-                </dialog>
+                Create new task
+            </header>
+            <form>
+                <input type="text" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Enter description">
 
+                <div style="margin-bottom: 5px;">
+                    Due date? <input bind:checked={form_has_due_date} on:change={dueDateShow} type="checkbox" style="margin-right: 1%">
+                </div>
+                
+                <input type="date" style="display: none;" bind:this={dueDateInput} bind:value={due_date}>
+                
+            </form>
+            <footer>
+                <a on:click={create_new_todo_modal.close()} href="#cancel">
+                    Cancel
+                </a>
                 <a on:click={addTodo} href="#addTodo" type="submit" role="button" id="formSubmit">
-                    <i class="fa-solid fa-check"></i>
+                    Accept
                 </a>
-
-            </div>
-        </form>
-    </div>
+            </footer>
+        </article>
+            
+        
+    </dialog>
     
     <hr>
     

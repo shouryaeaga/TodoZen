@@ -10,7 +10,7 @@ const getTodosForUser = async (req, res) => {
 }
 
 const createTodoForCurrentUser = async (req, res) => {
-    const {details, completed, due} = req.body
+    const {details, completed, due_date} = req.body
     if (!details) {
         return res.status(400).json({msg: "No detail provided"})
     }
@@ -22,9 +22,9 @@ const createTodoForCurrentUser = async (req, res) => {
     const user_id = req.user.id
 
     // Create the todo
-    if (due !== undefined) {
+    if (due_date !== undefined) {
         try {
-            const todo = await db.query("INSERT INTO todos (owner_id, details, completed, due_date) VALUES ($1, $2, $3) RETURNING *", [user_id, req.body.details, completed, due])
+            const todo = await db.query("INSERT INTO todos (owner_id, details, completed, due_date) VALUES ($1, $2, $3) RETURNING *", [user_id, req.body.details, completed, due_date])
             res.status(201).json(todo.rows[0])
         } catch (err) {
             return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
@@ -41,7 +41,7 @@ const createTodoForCurrentUser = async (req, res) => {
 }
 
 const updateTodoForCurrentUser = async (req, res) => {
-    const {details, completed, id, due} = req.body
+    const {details, completed, id, due_date} = req.body
     if (!(typeof(details) === "string") || !(typeof(completed) === "boolean")) {
         return res.status(400).json({msg: "Details are strings and completed is boolean"})
     }
@@ -53,9 +53,9 @@ const updateTodoForCurrentUser = async (req, res) => {
     }
 
     // Update the todo
-    if (due !== undefined) {
+    if (due_date !== undefined) {
         try {
-            const updatedTodo = await db.query("UPDATE todos SET details = $1, completed = $2, due_date = $3 WHERE id = $4 RETURNING *", [details, completed, due, id])
+            const updatedTodo = await db.query("UPDATE todos SET details = $1, completed = $2, due_date = $3 WHERE id = $4 RETURNING *", [details, completed, due_date, id])
             res.status(200).json(updatedTodo.rows[0])
         } catch (error) {
             return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})
