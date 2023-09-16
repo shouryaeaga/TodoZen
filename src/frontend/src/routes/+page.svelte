@@ -323,7 +323,7 @@
     <div id="todos">
         {#each todos as todo, index (todo.id)}
             
-            <Todo onDelete={deleteHandler} anonymous={anonymous} todo={todo} completed={todo.completed} details={todo.details} id={todo.id} />
+            <Todo onDelete={deleteHandler} anonymous={anonymous} todo={todo} completed={todo.completed} details={todo.details} id={todo.id} due_date={todo.due_date}/>
             <hr>
         {/each}
     </div>

@@ -6,11 +6,12 @@ const getTodosForUser = async (req, res) => {
 
     // Get the todos for the user
     const todos = await db.query("SELECT * FROM todos WHERE owner_id = $1", [user_id])
+    console.log(todos)
     res.status(200).json(todos.rows)
 }
 
 const createTodoForCurrentUser = async (req, res) => {
-    const {details, completed, due_date} = req.body
+    let {details, completed, due_date} = req.body
     if (!details) {
         return res.status(400).json({msg: "No detail provided"})
     }
