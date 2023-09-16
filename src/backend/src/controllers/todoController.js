@@ -6,7 +6,6 @@ const getTodosForUser = async (req, res) => {
 
     // Get the todos for the user
     const todos = await db.query("SELECT * FROM todos WHERE owner_id = $1", [user_id])
-    console.log(todos)
     res.status(200).json(todos.rows)
 }
 
@@ -25,7 +24,7 @@ const createTodoForCurrentUser = async (req, res) => {
     // Create the todo
     if (due_date !== undefined) {
         try {
-            const todo = await db.query("INSERT INTO todos (owner_id, details, completed, due_date) VALUES ($1, $2, $3) RETURNING *", [user_id, req.body.details, completed, due_date])
+            const todo = await db.query("INSERT INTO todos (owner_id, details, completed, due_date) VALUES ($1, $2, $3, $4) RETURNING *", [user_id, req.body.details, completed, due_date])
             res.status(201).json(todo.rows[0])
         } catch (err) {
             return res.status(500).json({msg: "There was an error, please contact shourya.eaga.09@gmail.com"})

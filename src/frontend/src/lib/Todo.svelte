@@ -12,17 +12,16 @@
     let new_due_date
     let due_date_form
 
-    
+    const oneDay = 24 * 60 * 60 * 1000
     let date
     let due_date_parsed
     let days_till_due_date
-    if (due_date) {
-        const oneDay = 24 * 60 * 60 * 1000
-        date = new Date()
-        due_date_parsed = new Date(due_date)
-        date.setHours(0, 0, 0)
-        days_till_due_date = Math.round((due_date_parsed - date) / oneDay)
-    }
+
+    date = new Date()
+    due_date_parsed = new Date(due_date)
+    date.setHours(0, 0, 0)
+    days_till_due_date = Math.round((due_date_parsed - date) / oneDay)
+
 
     import apiUrl from "./appConfig"
     const api_url = apiUrl.apiUrl
@@ -60,16 +59,15 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    edit_modal.close()
+                    oldDetails = details
                     details = data.details
                     oldDetails = details
                     completed = data.completed
                     due_date = new_due_date
                     due_date_parsed = new Date(due_date)
                     days_till_due_date = Math.round((due_date_parsed - date) / oneDay)
-                })
-                .then(() => {
-                    edit_modal.close()
-                    oldDetails = details
+                    
                 })
             } 
         }
@@ -134,16 +132,18 @@
     
     <div class="container-fluid">
         <div>
-            {#if days_till_due_date == 0}
+            
+            {#if !due_date}
+            <h5>No due date set</h5>
+            {:else if days_till_due_date == 0}
             <h5>Task due today - {due_date_parsed.toDateString()}</h5>
             {:else if days_till_due_date == 1}
             <h5>Task due tomorrow - {due_date_parsed.toDateString()}</h5>
             {:else if days_till_due_date > 1}
             <h5>Task due in {days_till_due_date} days - {due_date_parsed.toDateString()}</h5>
-            {:else if days_till_due_date < 0}
-            <h5>Task due {days_till_due_date * -1} days ago - {due_date_parsed.toDateString()}</h5>
             {:else}
-            <h5>No date set for task</h5>
+            <h5>Task due {days_till_due_date * -1} days ago - {due_date_parsed.toDateString()}</h5>
+            
             {/if}
             
             <input style="width: 85%; margin-right: 10px;" type="text" name="details" id="details" bind:this={detailsInput} bind:value={details} on:input={areTheyTheSame} readonly />
@@ -171,7 +171,7 @@
             <form>
                 <input type="text" name="detail-edit" id="detail-edit" placeholder={details} bind:value={details}>
                 Due date? <input type="checkbox" bind:checked={show_date_entry_form} on:change={handleDueDateChange}>
-                {#if due_date}
+                {#if show_date_entry_form}
                 <input type="date" bind:this={due_date_form} bind:value={new_due_date}>
                 {:else}
                 <input type="date" style="display: none;" bind:this={due_date_form} bind:value={new_due_date}>
