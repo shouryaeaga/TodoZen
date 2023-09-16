@@ -22,9 +22,20 @@
     let settings_modal
 
     let user = {};
+
+    let dueDateInput
+
     let username = ""
 
     let isLight
+
+    let form_has_due_date = false
+
+    let due_date_modal
+
+    let due_date
+
+    let create_new_todo_modal
 
     function refresh(todoReq) {
         fetch(`${api_url}/auth/refresh`, {
@@ -73,7 +84,15 @@
         if (todoDetail.length > 512) {
             alert("Todo cannot be longer than 512 characters")
             return
-        } 
+        } else if (todoDetail.length === 0){
+            alert("Todo must have detail")
+            return
+        } else if (form_has_due_date && due_date == undefined) {
+            alert("Specify the due date please")
+            return
+        }
+        create_new_todo_modal.close()
+        console.log(due_date)
         if (!anonymous) {
             fetch(`${api_url}/todo/me`, {
                 method: "POST",
@@ -83,6 +102,7 @@
                 },
                 body: JSON.stringify({
                     details: todoDetail,
+                    due_date: due_date
                 }),
             })
             .then((response) => response.json())
@@ -92,7 +112,7 @@
             })
             .catch((err) => console.log(err))
         } else {
-            const newTodo = {id: crypto.randomUUID(), anonymous: true, details: todoDetail, completed: false}
+            const newTodo = {id: crypto.randomUUID(), anonymous: true, details: todoDetail, completed: false, due_date: due_date}
             todos = [...todos, newTodo]
             localStorage.setItem("todos", JSON.stringify(todos))
         }
@@ -177,6 +197,22 @@
         isLight = !isLight
         localStorage.setItem("isLight", String(isLight))
     }
+
+    function dueDateShow() {
+        console.log(form_has_due_date)
+        if (form_has_due_date) {
+            
+            dueDateInput.style.display = "inline"
+        } else {
+            dueDateInput.style.display = "none"
+        }
+    }
+
+    function submitDueDate() {
+        due_date_modal.close()
+        console.log(due_date)
+    }
+
 </script>
 
 <svelte:head>
@@ -202,7 +238,7 @@
 {#if anonymous}
     <nav class="container-fluid">
         <ul>
-            <li><a style="color: white;" href="/">TodoZen</a></li>
+            <li><a data-placement="bottom" data-tooltip="Back home" aria-label="Back home" class="contrast" href="/">TodoZen</a></li>
         </ul>
         <ul>
             <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
@@ -212,7 +248,7 @@
 {:else}
     <nav class="container-fluid">
         <ul>
-            <li><a style="color: white;" href="/">TodoZen</a></li>
+            <li><a data-placement="bottom" data-tooltip="Back home" aria-label="Back home" class="contrast" href="/">TodoZen</a></li>
         </ul>
         <ul>
             <li><a role="button" href="#toggle" class="contrast theme-switcher" on:click={toggleTheme}>Toggle theme</a></li>
@@ -247,15 +283,39 @@
     </dialog>
     {/if}
     
-    <div id="createForm">
+    <a href="#create" on:click={create_new_todo_modal.showModal()}>
+        <strong>+</strong> Create new todo
+    </a>
+
+    <dialog bind:this={create_new_todo_modal} id="create-new-todo-modal">
+        <article>
+            <header>
+                <a href="#close" class="close" on:click={create_new_todo_modal.close()}>
+                </a>
+                Create new task
+            </header>
+            <form>
+                <input type="text" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Enter description">
+
+                <div style="margin-bottom: 5px;">
+                    Due date? <input bind:checked={form_has_due_date} on:change={dueDateShow} type="checkbox" style="margin-right: 1%">
+                </div>
+                
+                <input type="date" style="display: none;" bind:this={dueDateInput} bind:value={due_date}>
+                
+            </form>
+            <footer>
+                <a on:click={create_new_todo_modal.close()} href="#cancel">
+                    Cancel
+                </a>
+                <a on:click={addTodo} href="#addTodo" type="submit" role="button" id="formSubmit">
+                    Accept
+                </a>
+            </footer>
+        </article>
+            
         
-        <form on:submit={addTodo}>
-            <div class="container-fluid">
-                <input type="text" style="margin-right: 2%; width: 70%" name="detailsInput" id="detailsInput" bind:value={todoDetail} placeholder="Make coffee" required>
-                <input type="submit" style="width: 25%;" value="Add Task" id="formSubmit">
-            </div>
-        </form>
-    </div>
+    </dialog>
     
     <hr>
     
@@ -263,7 +323,7 @@
     <div id="todos">
         {#each todos as todo, index (todo.id)}
             
-            <Todo onDelete={deleteHandler} anonymous={anonymous} todo={todo} completed={todo.completed} details={todo.details} id={todo.id} />
+            <Todo onDelete={deleteHandler} anonymous={anonymous} todo={todo} completed={todo.completed} details={todo.details} id={todo.id} due_date={todo.due_date}/>
             <hr>
         {/each}
     </div>
