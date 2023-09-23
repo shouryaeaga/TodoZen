@@ -181,7 +181,30 @@ const forgotPassword = async (req, res) => {
 
         const insertQuery = "UPDATE users SET password_token = $1 WHERE email = $2"
         const insertResults = await db.query(insertQuery, [password_token, email])
-        sendEmail(process.env.EMAIL_FROM, email, "Password Reset", `Password reset link: http://${process.env.FRONTEND_URL}/auth/password-reset?user_id=${results.rows[0].id}&token=${password_token}`)
+        const template = `
+        <h1 style="font-family: 'Segoe UI'; text-align: center">
+          TodoZen
+        </h1>
+        <div style="border: solid 1px lightgray; padding: 10px; border-radius: 5px">
+          <h2 style="font-family: 'Segoe UI'; text-align: center;">Hello ${results.rows[0].username}</h2>
+          <h3 style="font-family: 'Segoe UI'; text-align: center; " >A request to reset your password for your TodoZen account has been sent</h3>
+          <h4 style="font-family: 'Segoe UI'; text-align: center; margin-bottom: 40px;">Click here to reset your password</h4>
+          <p style="text-align: center">
+            <a style="font-family: 'Segoe UI'; font-size: 20px; text-decoration: none; border-radius: 10px; text-align: center; padding: 15px; color: white; background-color: #008CBA;" href="http://${process.env.FRONTEND_URL}/auth/password-reset?user_id=${results.rows[0].id}&token=${password_token}">Reset Your Password</a>
+          </p>
+          <p style="margin-top: 30px; text-align: center; font-family: 'Segoe UI'">
+              If you didn't request this email, then can you safely ignore it
+          </p>
+        </div>
+          <footer>
+          <p style="text-align: center;">
+            <small>
+            Contact: support@shouryaeaga.com
+            </small>
+          </p>
+          </footer>
+        `
+        sendEmail(process.env.EMAIL_FROM, email, "Password Reset", template)
         return res.status(200).json({msg:"Password reset link sent if email exists"})
     } catch (err) {
         console.log(err)
